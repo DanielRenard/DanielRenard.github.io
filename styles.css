@@ -1,0 +1,53 @@
+body {
+    display: table;
+    margin: auto;
+    padding-inline: 20;
+}
+
+header {
+    background-color: ghostwhite;
+    padding: 3rem;
+    text-align: center;
+    font-size: 100px;
+    color: rgb(190, 71, 71);
+}    
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+img {
+    width: 250px;
+}
+
+.image {
+    flex-basis: 40%
+
+}
+.text {
+    width: 250px;  
+    /* padding-left: 0px; */
+    font-size: 25px;
+}
+
+a {
+  padding: 20%;
+  font-size: 50px;
+}
+
+h2 {
+    background-color: maroon;
+    color: blanchedalmond;
+}
+
+h3 {
+    background-color: goldenrod;
+}
+
+h4 {
+    font-size: 30px;
+    background-color: blue;
+    color: goldenrod;
+}
