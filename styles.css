@@ -6,6 +6,9 @@ body {
 
 header {
     background-color: ghostwhite;
+    border-style: solid;
+    border-radius: 10%;
+    border-color: rgb(190, 71, 71);
     padding: 3rem;
     text-align: center;
     font-size: 100px;
@@ -14,26 +17,26 @@ header {
 
 .container {
     display: flex;
-    align-items: center;
-    justify-content: center
+    align-items: left;
+    justify-content: space-evenly;
 }
 
 img {
-    width: 250px;
+    width: 200px;
+    background-color: burlywood;
+    padding: 3rem;
+    border: 5px solid goldenrod;
 }
 
-.image {
-    flex-basis: 40%
-
-}
 .text {
-    width: 250px;  
-    /* padding-left: 0px; */
+    width: 250px;
+    padding: 3rem;
     font-size: 25px;
 }
 
-a {
-  padding: 20%;
+.links {
+  width: 250px;
+  padding: 3rem;
   font-size: 50px;
 }
 
@@ -47,6 +50,12 @@ h3 {
 }
 
 h4 {
+  background-color: purple;
+  color: green;
+  font-size: 25px;
+}
+
+h5 {
     font-size: 30px;
     background-color: blue;
     color: goldenrod;
