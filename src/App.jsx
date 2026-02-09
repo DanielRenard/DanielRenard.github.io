@@ -93,7 +93,7 @@ export default function App() {
       </Box>
 
       {/* ABOUT */}
-      <Section id="about" title="About" subtitle="What I've been up to">
+      <Section id="about" title="About Me" subtitle="What I've Been Up To:">
         <Card variant="outlined">
           <CardContent>
             <Typography>
@@ -178,7 +178,7 @@ export default function App() {
       <Section
         id="projects"
         title="Projects"
-        subtitle="A few things I'm proud of"
+        subtitle="A Few Things I'm Proud Of:"
       >
         <Grid container spacing={2}>
           {projects.map((p, idx) => (
@@ -229,7 +229,7 @@ export default function App() {
       <Section
         id="experience"
         title="Work Experience"
-        subtitle="Roles + outcomes"
+        subtitle="Roles + Outcomes:"
       >
         <Stack spacing={2}>
           {experience.map((x, idx) => (
@@ -256,7 +256,7 @@ export default function App() {
       <Section
         id="youtube"
         title="YouTube Playlist"
-        subtitle="A playlist featuring projects I've worked on. Includes the 2023 Louisiana Gornernor Debate, Interviews with a robotic camera setup in a small studio, and short documentaries from my time in film school."
+        subtitle="This playlist features some of my production experiences. This includes the 2023 Louisiana Gornernor Debate, interviews shot with a robotic camera setup in a small studio, and short documentaries from my time in film school."
       >
         <YoutubeEmbed playlistId={contact.youtubePlaylistId} />
       </Section>
@@ -265,12 +265,12 @@ export default function App() {
       <Section
         id="contact"
         title="Contact"
-        subtitle="The easiest ways to reach me and see my work."
+        subtitle="Learn More About Me:"
       >
         <Stack spacing={2}>
           <ContactChips contact={contact} />
           <Typography color="text.secondary">
-            The best way to contact me is email.
+            The best way to contact me is through email.
           </Typography>
         </Stack>
       </Section>
