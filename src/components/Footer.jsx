@@ -5,7 +5,7 @@ export default function Footer() {
     <Box sx={{ py: 4, borderTop: "1px solid", borderColor: "divider" }}>
       <Container maxWidth="lg">
         <Typography variant="body2" color="text.secondary">
-          © {new Date().getFullYear()} Your Name. Built with React + MUI.
+          © {new Date().getFullYear()} Daniel Renard. Built with React + MUI.
         </Typography>
       </Container>
     </Box>

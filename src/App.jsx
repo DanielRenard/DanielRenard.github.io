@@ -46,10 +46,13 @@ export default function App() {
         <Container maxWidth="lg">
           <Grid container spacing={4} alignItems="center">
             <Grid item xs={12} md={4}>
-              <Stack alignItems={{ xs: "center", md: "flex-start" }} spacing={2}>
+              <Stack
+                alignItems={{ xs: "center", md: "flex-start" }}
+                spacing={2}
+              >
                 <Avatar
-                  alt="Your photo"
-                  src="" // <-- add your image URL or import and pass it here later
+                  alt="my photo"
+                  src="/images/dan.jpeg"
                   sx={{ width: 180, height: 180 }}
                 />
                 <ContactChips contact={contact} />
@@ -64,7 +67,10 @@ export default function App() {
                 <Typography variant="h6" color="text.secondary">
                   {profile.title}
                 </Typography>
-                <Typography variant="body1" sx={{ maxWidth: 720, mx: { xs: "auto", md: 0 } }}>
+                <Typography
+                  variant="body1"
+                  sx={{ maxWidth: 720, mx: { xs: "auto", md: 0 } }}
+                >
                   {profile.blurb}
                 </Typography>
 
@@ -87,23 +93,34 @@ export default function App() {
       </Box>
 
       {/* ABOUT */}
-      <Section
-        id="about"
-        title="About"
-        subtitle="A short snapshot of what you do and what you’re aiming for."
-      >
+      <Section id="about" title="About" subtitle="What I've been up to">
         <Card variant="outlined">
           <CardContent>
             <Typography>
-              Replace this with your longer “About me” section. You can mention your strengths,
-              the kinds of products you like building, and what makes you different.
+              With 7 years of experience in Television Broadcasting, a master’s
+              degree in History, and a professional background in education and
+              library services, I bring a unique ability to engage diverse
+              audiences and communicate complex ideas clearly. My academic and
+              library experience have strengthened my research, information
+              management, and community engagement skills—key to fostering
+              curiosity and lifelong learning. Having also transitioned into
+              Software Engineering through a UTS industry-accredited Certificate
+              focused on practical, project-based learning, I combine technical
+              literacy with strong communication and analytical abilities.
+              Whether in the classroom, library, or digital learning
+              environment, I strive to create inclusive, dynamic spaces that
+              support discovery, critical thinking, and personal growth.
             </Typography>
           </CardContent>
         </Card>
       </Section>
 
       {/* EDUCATION & TRAINING */}
-      <Section id="education" title="Education & Training" subtitle="Degrees, certifications, bootcamps.">
+      <Section
+        id="education"
+        title="Education & Training"
+        subtitle="Degrees, certifications"
+      >
         <Grid container spacing={2}>
           <Grid item xs={12} md={6}>
             <Typography variant="h6" sx={{ mb: 1, fontWeight: 800 }}>
@@ -158,7 +175,11 @@ export default function App() {
       </Section>
 
       {/* PROJECTS */}
-      <Section id="projects" title="Projects" subtitle="A few things you’re proud of (with links).">
+      <Section
+        id="projects"
+        title="Projects"
+        subtitle="A few things I'm proud of"
+      >
         <Grid container spacing={2}>
           {projects.map((p, idx) => (
             <Grid item xs={12} md={6} key={idx}>
@@ -171,7 +192,13 @@ export default function App() {
                     {p.description}
                   </Typography>
 
-                  <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap" sx={{ mb: 2 }}>
+                  <Stack
+                    direction="row"
+                    spacing={1}
+                    useFlexGap
+                    flexWrap="wrap"
+                    sx={{ mb: 2 }}
+                  >
                     {p.tech.map((t) => (
                       <Chip key={t} label={t} size="small" variant="outlined" />
                     ))}
@@ -199,7 +226,11 @@ export default function App() {
       </Section>
 
       {/* EXPERIENCE */}
-      <Section id="experience" title="Work Experience" subtitle="Roles + outcomes + the stack.">
+      <Section
+        id="experience"
+        title="Work Experience"
+        subtitle="Roles + outcomes"
+      >
         <Stack spacing={2}>
           {experience.map((x, idx) => (
             <Card key={idx} variant="outlined">
@@ -225,7 +256,7 @@ export default function App() {
       <Section
         id="youtube"
         title="YouTube Playlist"
-        subtitle="A playlist featuring projects I worked on."
+        subtitle="A playlist featuring projects I've worked on. Includes the 2023 Louisiana Gornernor Debate, Interviews with a robotic camera setup in a small studio, and short documentaries from my time in film school."
       >
         <YoutubeEmbed playlistId={contact.youtubePlaylistId} />
       </Section>
@@ -239,7 +270,7 @@ export default function App() {
         <Stack spacing={2}>
           <ContactChips contact={contact} />
           <Typography color="text.secondary">
-            Tip: keep your email as a mailto link, and add a short “best way to contact me” line here.
+            The best way to contact me is email.
           </Typography>
         </Stack>
       </Section>
