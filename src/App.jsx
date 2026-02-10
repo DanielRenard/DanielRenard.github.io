@@ -130,7 +130,7 @@ export default function App() {
                     color="primary"
                   />
                   <Chip
-                    label="Remote / Hybrid / In Person"
+                    label="Remote / Hybrid / Onsite"
                     variant="outlined"
                     color="secondary"
                   />

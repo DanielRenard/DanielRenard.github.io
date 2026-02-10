@@ -3,7 +3,7 @@ export const profile = {
   title:
     "M.A. History | Library Associate | Full-Stack Engineer: React | Node | AWS",
   blurb:
-    "I bridge humanities, education, and technology—bringing experience in broadcasting, research, and software engineering to create accessible, engaging learning and digital environments.",
+    "I bridge humanities, and technology—bringing experience in broadcasting, research, and software engineering to create accessible, engaging learning and digital environments.",
   location: "Southern California",
 };
 
@@ -45,10 +45,9 @@ export const training = [
 
 export const projects = [
   {
-    name: "Clarisphere",
+    name: "Clarisphere: A Coaching Application",
     description:
-      "I have previously deployed this React single-page application (SPA) for both development (forge.clarisphere.io) and production (clarisphere.io) using AWS S3, CloudFront, and GitHub Actions.",
-    tech: ["JavaScript", "CSS", "HTML", "React", "Node", "MUI", "Github Actions", "Amazon S3", "Cloudfront"],
+      "Working with Quantum Sky Inc (a small startup), we have designed an engaging online coaching platform. The backend is currently in development, but you can take a peek at the frontend code now.",
     links: [
       {
         label: "GitHub",
@@ -77,7 +76,7 @@ export const projects = [
     ],
   },
   {
-    name: "Ecommerce Website",
+    name: "E-commerce Website",
     description: "Simple Storefront exercise",
     tech: ["JavaScript", "CSS", "HTML", "Bootstrap"],
     links: [
@@ -92,13 +91,13 @@ export const experience = [
     company: "Riverside County Library System",
     dates: "2025 – Current",
     bullets: [
-      "Researh and exhibition of archived items",
+      "Research and exhibition of archived items",
       "Public Service & Reference: Provide in-depth assistance to patrons with library materials, research, and technology (computers, scanners, copiers).",
       "Circulation & Records: Manage complex circulation tasks, such as handling overdue fines, managing hold requests, and maintaining patron records.",
       "Collection Maintenance: Oversee shelving, shelf-reading for accuracy, and identifying items needing repair or withdrawal.",
       "Programming & Outreach: Assist with or lead library events, storytimes, and promotional activities like creating displays or flyers.",
       "Supervision & Operations: Supervise library assistants, pages, or volunteers; assist in opening/closing procedures.",
-      "Technical Support: Assist with basic cataloging or database maintenance."
+      "Technical Support: Assist with basic cataloging or database maintenance.",
     ],
   },
   {
@@ -111,7 +110,7 @@ export const experience = [
       "Mentoring and Guidance: Support students in developing problem-solving and analytical skills. Offer feedback on assignments, projects, or code quality to help learners improve.",
       "Content Preparation and Adaptation: Adapt teaching methods based on feedback or the specific needs of learners.",
       "Monitoring Progress: Track student progress and engagement, identifying those who might need additional support. Provide reports or updates to the lead trainer or program management.",
-      "Facilitating Communication: Act as a bridge between the lead trainer and students, ensuring open communication and clarity. Answer student questions during or after sessions to ensure learning continuity."
+      "Facilitating Communication: Act as a bridge between the lead trainer and students, ensuring open communication and clarity. Answer student questions during or after sessions to ensure learning continuity.",
     ],
   },
   {
@@ -122,7 +121,7 @@ export const experience = [
       "Directed daily live newscasts, coordinating staff and technology under strict deadlines.",
       "Assisted colleagues in operating production systems and solved technical issues in real time.",
       "Maintained accurate programming records and ensured compliance with broadcast standards.",
-      "Recognized with multiple LAB Prestige Awards for excellence in broadcast execution and teamwork."
+      "Recognized with multiple LAB Prestige Awards for excellence in broadcast execution and teamwork.",
     ],
   },
   {
@@ -133,7 +132,7 @@ export const experience = [
       "Delivered exceptional customer service by creating unique experiences for diverse guests.",
       "Scheduled and supervised photographers, balancing staffing needs with guest demand.",
       "Resolved guest concerns promptly and professionally, ensuring satisfaction.",
-      "Maintained equipment, organized schedules, and trained new employees in operational procedures."
+      "Maintained equipment, organized schedules, and trained new employees in operational procedures.",
     ],
   },
 ];
