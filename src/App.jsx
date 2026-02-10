@@ -74,8 +74,11 @@ export default function App() {
 
     const r = targetEl.getBoundingClientRect();
 
-    // ✅ End at "top-left of the section" with a little inset padding
-    const end = { x: r.left + 16, y: r.top + 16 };
+    // ✅ Land on top-left INSIDE the section (padding-safe)
+    const end = {
+      x: r.left + 24,
+      y: r.top + 24,
+    };
 
     const avatarCenter = getCenter(avatarRef.current);
 
@@ -84,7 +87,11 @@ export default function App() {
         ? clickPos
         : (avatarCenter ?? clickPos ?? { x: 24, y: 24 });
 
-    setCometEvent({ start, end, id: `${sectionId}-${Date.now()}` });
+    setCometEvent({
+      start,
+      targetId: sectionId,
+      id: `${sectionId}-${Date.now()}`,
+    });
   };
 
   return (

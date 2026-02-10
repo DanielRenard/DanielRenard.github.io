@@ -17,6 +17,30 @@ import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import Tooltip from "@mui/material/Tooltip";
 
+function smoothScrollTo(targetY, duration = 1200) {
+  const startY = window.scrollY;
+  const diff = targetY - startY;
+  const startTime = performance.now();
+
+  function easeInOutCubic(t) {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  }
+
+  function step(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = easeInOutCubic(progress);
+
+    window.scrollTo(0, startY + diff * eased);
+
+    if (progress < 1) {
+      requestAnimationFrame(step);
+    }
+  }
+
+  requestAnimationFrame(step);
+}
+
 export default function Navbar({ sections, mode, onToggleMode, onNavigate }) {
   const [open, setOpen] = useState(false);
   const [activeId, setActiveId] = useState(sections?.[0]?.id ?? "top");
@@ -33,7 +57,10 @@ export default function Navbar({ sections, mode, onToggleMode, onNavigate }) {
   const scrollTo = (id) => {
     const el = document.getElementById(id);
     if (!el) return;
-    el.scrollIntoView({ behavior: "smooth", block: "start" });
+    const y = el.getBoundingClientRect().top + window.scrollY - 96; // offset for AppBar height
+
+    smoothScrollTo(y, 1800); // slower = bigger number
+
     setOpen(false);
   };
 
