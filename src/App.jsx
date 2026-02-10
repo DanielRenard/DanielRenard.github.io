@@ -23,14 +23,16 @@ import YoutubeEmbed from "./components/YoutubeEmbed";
 
 import { getTheme } from "./theme";
 
-import {
-  profile,
-  education,
-  training,
-  projects,
-  experience,
-  contact,
-} from "./content";
+import * as content from "./content";
+
+const {
+  profile = {},
+  education = [],
+  training = [],
+  projects = [],
+  experience = [],
+  contact = {},
+} = content;
 
 export default function App() {
   const sections = [
@@ -207,7 +209,7 @@ export default function App() {
                     </Typography>
                     <Typography color="text.secondary">{e.dates}</Typography>
                     <Box component="ul" sx={{ mt: 1, mb: 0, pl: 2 }}>
-                      {e.details.map((d, i) => (
+                      {(e.details ?? []).map((d, i) => (
                         <li key={i}>
                           <Typography variant="body2">{d}</Typography>
                         </li>
@@ -241,7 +243,7 @@ export default function App() {
                     </Typography>
                     <Typography color="text.secondary">{t.dates}</Typography>
                     <Box component="ul" sx={{ mt: 1, mb: 0, pl: 2 }}>
-                      {t.details.map((d, i) => (
+                      {(t.details ?? []).map((d, i) => (
                         <li key={i}>
                           <Typography variant="body2">{d}</Typography>
                         </li>
@@ -281,9 +283,9 @@ export default function App() {
                     flexWrap="wrap"
                     sx={{ mb: 2 }}
                   >
-                    {p.tech.map((t, i) => (
+                    {(p.tech ?? []).map((t, i) => (
                       <Chip
-                        key={t}
+                        key={`${t}-${i}`}
                         label={t}
                         size="small"
                         variant="outlined"
@@ -293,7 +295,7 @@ export default function App() {
                   </Stack>
 
                   <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
-                    {p.links.map((l, i) => (
+                    {(p.links ?? []).map((l, i) => (
                       <Button
                         key={l.href}
                         href={l.href}
@@ -329,7 +331,7 @@ export default function App() {
                 </Typography>
                 <Typography color="text.secondary">{x.dates}</Typography>
                 <Box component="ul" sx={{ mt: 1, mb: 0, pl: 2 }}>
-                  {x.bullets.map((b, i) => (
+                  {(x.bullets ?? []).map((b, i) => (
                     <li key={i}>
                       <Typography variant="body2">{b}</Typography>
                     </li>

@@ -3,7 +3,7 @@ export const profile = {
   title:
     "M.A. History | Library Associate | Full-Stack Engineer: React | Node | AWS",
   blurb:
-    "I bridge humanities, and technology—bringing experience in broadcasting, research, and software engineering to create accessible, engaging learning and digital environments.",
+    "I bridge the humanities and technology—bringing experience in broadcasting, research, and software engineering to create accessible, engaging learning and digital environments.",
   location: "Southern California",
 };
 
@@ -48,6 +48,7 @@ export const projects = [
     name: "Clarisphere: A Coaching Application",
     description:
       "Working with Quantum Sky Inc (a small startup), we have designed an engaging online coaching platform. The backend is currently in development, but you can take a peek at the frontend code now.",
+    tech: ["React", "MUI", "Vite", "Node", "AWS"],
     links: [
       {
         label: "GitHub",
