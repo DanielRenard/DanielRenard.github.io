@@ -17,7 +17,7 @@ import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import Tooltip from "@mui/material/Tooltip";
 
-export default function Navbar({ sections, mode, onToggleMode }) {
+export default function Navbar({ sections, mode, onToggleMode, onNavigate }) {
   const [open, setOpen] = useState(false);
   const [activeId, setActiveId] = useState(sections?.[0]?.id ?? "top");
 
@@ -27,7 +27,7 @@ export default function Navbar({ sections, mode, onToggleMode }) {
         id: s.id,
         label: s.label,
       })),
-    [sections]
+    [sections],
   );
 
   const scrollTo = (id) => {
@@ -48,7 +48,7 @@ export default function Navbar({ sections, mode, onToggleMode }) {
         const visible = entries
           .filter((e) => e.isIntersecting)
           .sort(
-            (a, b) => (b.intersectionRatio ?? 0) - (a.intersectionRatio ?? 0)
+            (a, b) => (b.intersectionRatio ?? 0) - (a.intersectionRatio ?? 0),
           )[0];
 
         if (visible?.target?.id) setActiveId(visible.target.id);
@@ -57,7 +57,7 @@ export default function Navbar({ sections, mode, onToggleMode }) {
         threshold: [0.2, 0.35, 0.5, 0.65],
         // Adjust for sticky navbar height so "active" feels right
         rootMargin: "-88px 0px -55% 0px",
-      }
+      },
     );
 
     els.forEach((el) => obs.observe(el));
@@ -102,7 +102,10 @@ export default function Navbar({ sections, mode, onToggleMode }) {
                   <Button
                     key={it.id}
                     color="inherit"
-                    onClick={() => scrollTo(it.id)}
+                    onClick={(e) => {
+                      onNavigate?.(it.id, { x: e.clientX, y: e.clientY });
+                      scrollTo(it.id);
+                    }}
                     sx={{
                       position: "relative",
                       px: 1.2,

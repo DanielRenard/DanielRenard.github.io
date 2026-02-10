@@ -20,6 +20,7 @@ import Section from "./components/Section";
 import Footer from "./components/Footer";
 import ContactChips from "./components/ContactChips";
 import YoutubeEmbed from "./components/YoutubeEmbed";
+import CometLayer from "./components/CometLayer";
 
 import { getTheme } from "./theme";
 
@@ -58,12 +59,43 @@ export default function App() {
 
   const theme = React.useMemo(() => getTheme(mode), [mode]);
 
+  const avatarRef = React.useRef(null);
+  const [cometEvent, setCometEvent] = React.useState(null);
+
+  const getCenter = (el) => {
+    const r = el?.getBoundingClientRect?.();
+    if (!r) return null;
+    return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+  };
+
+  const handleNavigate = (sectionId, clickPos) => {
+    const targetEl = document.getElementById(sectionId);
+    if (!targetEl) return;
+
+    const r = targetEl.getBoundingClientRect();
+
+    // ✅ End at "top-left of the section" with a little inset padding
+    const end = { x: r.left + 16, y: r.top + 16 };
+
+    const avatarCenter = getCenter(avatarRef.current);
+
+    const start =
+      clickPos && window.innerWidth >= 900
+        ? clickPos
+        : (avatarCenter ?? clickPos ?? { x: 24, y: 24 });
+
+    setCometEvent({ start, end, id: `${sectionId}-${Date.now()}` });
+  };
+
   return (
     <ThemeProvider theme={theme}>
+      <CometLayer event={cometEvent} zIndex={2} />
+
       <Navbar
         sections={sections}
         mode={mode}
         onToggleMode={() => setMode((m) => (m === "light" ? "dark" : "light"))}
+        onNavigate={handleNavigate}
       />
 
       {/* HERO */}
@@ -87,6 +119,7 @@ export default function App() {
                 <Avatar
                   alt="my photo"
                   src="/images/dan.jpeg"
+                  ref={avatarRef}
                   sx={{
                     width: 180,
                     height: 180,
