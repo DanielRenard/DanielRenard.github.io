@@ -25,8 +25,8 @@ export const getTheme = (mode = "light") =>
               paper: "#151020",
             },
             text: {
-              primary: "#F0EDF7", // ✅ brighter for readability
-              secondary: "#BDB6CB", // ✅ readable secondary text
+              primary: "#F0EDF7", // brighter for readability
+              secondary: "#BDB6CB", // readable secondary text
             },
             divider: "rgba(188, 160, 255, 0.16)",
           }),
@@ -60,27 +60,26 @@ export const getTheme = (mode = "light") =>
         styleOverrides: {
           root: ({ theme, ownerState }) => ({
             ...(theme.palette.mode === "dark" && {
-              // 🔴 TEXT: force high contrast
+              // TEXT: force high contrast
               color: "#FFFFFF",
 
-              // 🔴 BACKGROUND: darker so text pops
+              // BACKGROUND: darker so text pops
               backgroundColor: "rgba(255,255,255,0.12)",
 
-              // 🔴 BORDER: clearly visible
+              // BORDER: clearly visible
               borderColor: "rgba(255,255,255,0.55)",
 
               fontWeight: 500,
             }),
 
-            // 🟢 Secondary (green) chips — intentionally green
+            // Secondary (green) chips — intentionally green
             ...(theme.palette.mode === "dark" &&
               ownerState.color === "secondary" && {
                 backgroundColor: "rgba(46,125,50,0.45)",
                 borderColor: "rgba(46,125,50,0.9)",
                 color: "#E9F5EC",
               }),
-
-            // 🟣 Primary (purple) chips — optional but consistent
+            // Primary (purple) chips — optional but consistent
             ...(theme.palette.mode === "dark" &&
               ownerState.color === "primary" && {
                 backgroundColor: "rgba(91,46,145,0.45)",

@@ -17,7 +17,31 @@ import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import Tooltip from "@mui/material/Tooltip";
 
-export default function Navbar({ sections, mode, onToggleMode }) {
+function smoothScrollTo(targetY, duration = 1200) {
+  const startY = window.scrollY;
+  const diff = targetY - startY;
+  const startTime = performance.now();
+
+  function easeInOutCubic(t) {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  }
+
+  function step(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = easeInOutCubic(progress);
+
+    window.scrollTo(0, startY + diff * eased);
+
+    if (progress < 1) {
+      requestAnimationFrame(step);
+    }
+  }
+
+  requestAnimationFrame(step);
+}
+
+export default function Navbar({ sections, mode, onToggleMode, onNavigate }) {
   const [open, setOpen] = useState(false);
   const [activeId, setActiveId] = useState(sections?.[0]?.id ?? "top");
 
@@ -27,13 +51,16 @@ export default function Navbar({ sections, mode, onToggleMode }) {
         id: s.id,
         label: s.label,
       })),
-    [sections]
+    [sections],
   );
 
   const scrollTo = (id) => {
     const el = document.getElementById(id);
     if (!el) return;
-    el.scrollIntoView({ behavior: "smooth", block: "start" });
+    const y = el.getBoundingClientRect().top + window.scrollY - 96; // offset for AppBar height
+
+    smoothScrollTo(y, 1800); // slower = bigger number
+
     setOpen(false);
   };
 
@@ -48,7 +75,7 @@ export default function Navbar({ sections, mode, onToggleMode }) {
         const visible = entries
           .filter((e) => e.isIntersecting)
           .sort(
-            (a, b) => (b.intersectionRatio ?? 0) - (a.intersectionRatio ?? 0)
+            (a, b) => (b.intersectionRatio ?? 0) - (a.intersectionRatio ?? 0),
           )[0];
 
         if (visible?.target?.id) setActiveId(visible.target.id);
@@ -57,7 +84,7 @@ export default function Navbar({ sections, mode, onToggleMode }) {
         threshold: [0.2, 0.35, 0.5, 0.65],
         // Adjust for sticky navbar height so "active" feels right
         rootMargin: "-88px 0px -55% 0px",
-      }
+      },
     );
 
     els.forEach((el) => obs.observe(el));
@@ -102,7 +129,10 @@ export default function Navbar({ sections, mode, onToggleMode }) {
                   <Button
                     key={it.id}
                     color="inherit"
-                    onClick={() => scrollTo(it.id)}
+                    onClick={(e) => {
+                      onNavigate?.(it.id, { x: e.clientX, y: e.clientY });
+                      scrollTo(it.id);
+                    }}
                     sx={{
                       position: "relative",
                       px: 1.2,
