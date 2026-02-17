@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useTheme } from "@mui/material/styles";
 
 function clamp(n, a, b) {
   return Math.max(a, Math.min(b, n));
@@ -32,13 +31,11 @@ function getTargetPoint(targetId) {
   if (!el) return null;
 
   const r = el.getBoundingClientRect();
-
-  // ✅ Top-left of the title box ≈ "the A" in "About Me"
+  // Top-left of the title box ≈ "the A"
   return { x: r.left, y: r.top + 6 };
 }
 
 function makeSparks(count = 12, seed = 1) {
-  // deterministic-ish so it doesn't "jump" while rendering
   const sparks = [];
   let s = seed;
   const rand = () => {
@@ -47,18 +44,15 @@ function makeSparks(count = 12, seed = 1) {
   };
 
   for (let i = 0; i < count; i++) {
-    const a = rand() * Math.PI * 2; // angle
-    const v = 70 + rand() * 140; // velocity
-    const r0 = 2 + rand() * 3; // initial radius
-    const hueMix = rand(); // mix purple/green
-    sparks.push({ a, v, r0, hueMix });
+    const a = rand() * Math.PI * 2;
+    const v = 70 + rand() * 140;
+    const r0 = 2 + rand() * 3;
+    sparks.push({ a, v, r0 });
   }
   return sparks;
 }
 
-export default function CometLayer({ event, durationMs = 900, zIndex = 1 }) {
-  const theme = useTheme();
-
+export default function CometLayer({ event, durationMs = 900, zIndex = 2000 }) {
   const prefersReducedMotion = useMemo(() => {
     if (typeof window === "undefined" || !window.matchMedia) return false;
     return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -67,12 +61,13 @@ export default function CometLayer({ event, durationMs = 900, zIndex = 1 }) {
   const [visible, setVisible] = useState(false);
   const [progress, setProgress] = useState(0);
   const [head, setHead] = useState({ x: -9999, y: -9999 });
+  const [behind, setBehind] = useState({ x: -1, y: 0 });
+  const [currentD, setCurrentD] = useState("");
+  const [boom, setBoom] = useState(null);
   const [vp, setVp] = useState(() => ({
     w: typeof window !== "undefined" ? window.innerWidth : 1,
     h: typeof window !== "undefined" ? window.innerHeight : 1,
   }));
-  const [boom, setBoom] = useState(null);
-  // boom shape: { x, y, seed, startTs }
 
   const pathRef = useRef(null);
   const trailRef = useRef(null);
@@ -81,19 +76,18 @@ export default function CometLayer({ event, durationMs = 900, zIndex = 1 }) {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const onResize = () =>
-      setVp({ w: window.innerWidth, h: window.innerHeight });
+    const onResize = () => setVp({ w: window.innerWidth, h: window.innerHeight });
     window.addEventListener("resize", onResize, { passive: true });
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
   const gradientId = useMemo(
     () => `cometGradient-${event?.id ?? "default"}`,
-    [event?.id],
+    [event?.id]
   );
   const glowId = useMemo(
     () => `cometGlow-${event?.id ?? "default"}`,
-    [event?.id],
+    [event?.id]
   );
 
   useEffect(() => {
@@ -102,27 +96,30 @@ export default function CometLayer({ event, durationMs = 900, zIndex = 1 }) {
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
 
+    const endNow = getTargetPoint(event.targetId);
+    if (!endNow) return;
+
     if (prefersReducedMotion) {
-      const endNow = getTargetPoint(event.targetId);
-      if (!endNow) return;
+      // Show a static glow for longer on mobile
+      setCurrentD(
+        `M ${event.start.x} ${event.start.y} Q ${event.start.x} ${event.start.y} ${endNow.x} ${endNow.y}`
+      );
       setHead(endNow);
+      setBehind({ x: -1, y: 0 });
       setProgress(1);
       setVisible(true);
-      timeoutRef.current = setTimeout(() => setVisible(false), 1800);
+      timeoutRef.current = setTimeout(() => setVisible(false), 1200);
       return;
     }
 
     setVisible(true);
     setProgress(0);
+    setBoom(null);
 
     const start = event.start;
     const startTs = performance.now();
     const total = durationMs;
 
-    const pathEl = pathRef.current;
-    const trailEl = trailRef.current;
-
-    // We'll set d on each frame. Dash lengths need to be set once after we have a d.
     let dashReady = false;
     let pathLen = 0;
 
@@ -133,59 +130,62 @@ export default function CometLayer({ event, durationMs = 900, zIndex = 1 }) {
 
       const end = getTargetPoint(event.targetId);
       if (!end) {
-        // if target missing, just bail gracefully
         setVisible(false);
         setProgress(0);
         return;
       }
 
-      // Arc curve recomputed each frame so it tracks while the page scrolls
       const d = Math.hypot(end.x - start.x, end.y - start.y);
       const lift = clamp(d * 0.35, 120, 320);
       const mid = { x: (start.x + end.x) / 2, y: (start.y + end.y) / 2 };
       const ctrl = { x: mid.x, y: mid.y - lift };
 
       const dPath = `M ${start.x} ${start.y} Q ${ctrl.x} ${ctrl.y} ${end.x} ${end.y}`;
+      setCurrentD(dPath);
 
-      if (pathEl) pathEl.setAttribute("d", dPath);
-      if (trailEl) trailEl.setAttribute("d", dPath);
+      const p = quadPoint(start, ctrl, end, eased);
+      setHead(p);
 
-      // Initialize dash lengths once (after first d is set)
-      if (!dashReady && pathEl) {
-        pathLen = pathEl.getTotalLength();
-        pathEl.style.strokeDasharray = `${pathLen}`;
-        pathEl.style.strokeDashoffset = `${pathLen}`;
-        pathEl.style.opacity = "0.8";
-
-        if (trailEl) {
-          trailEl.style.strokeDasharray = `${pathLen}`;
-          trailEl.style.strokeDashoffset = `${pathLen}`;
-          trailEl.style.opacity = "0.25";
-        }
-        dashReady = true;
-      }
+      const tng = normalize(quadTangent(start, ctrl, end, eased));
+      setBehind({ x: -tng.x, y: -tng.y });
 
       setProgress(eased);
 
-      // Draw trail
+      const pathEl = pathRef.current;
+      const trailEl = trailRef.current;
+
+      // Dash init — retry until length > 0 (mobile safety)
+      if (!dashReady && pathEl) {
+        const len = pathEl.getTotalLength();
+        if (len > 0) {
+          pathLen = len;
+
+          pathEl.style.strokeDasharray = `${pathLen}`;
+          pathEl.style.strokeDashoffset = `${pathLen}`;
+          pathEl.style.opacity = "0.85";
+
+          if (trailEl) {
+            trailEl.style.strokeDasharray = `${pathLen}`;
+            trailEl.style.strokeDashoffset = `${pathLen}`;
+            trailEl.style.opacity = "0.28";
+          }
+
+          dashReady = true;
+        }
+      }
+
       if (dashReady && pathLen) {
         const off = (1 - eased) * pathLen;
         if (pathEl) pathEl.style.strokeDashoffset = `${off}`;
         if (trailEl) trailEl.style.strokeDashoffset = `${off}`;
       }
 
-      // Head follows curve
-      const p = quadPoint(start, ctrl, end, eased);
-      setHead(p);
-
       if (t < 1) {
         rafRef.current = requestAnimationFrame(tick);
       } else {
-        // ✅ snap exactly to header
         setHead(end);
         setProgress(1);
 
-        //trigger explosion at the header position
         setBoom({
           x: end.x,
           y: end.y,
@@ -193,11 +193,10 @@ export default function CometLayer({ event, durationMs = 900, zIndex = 1 }) {
           startTs: performance.now(),
         });
 
-        // fade comet out shortly after impact
         timeoutRef.current = setTimeout(() => {
           setVisible(false);
           setProgress(0);
-          setBoom(null); // optional: clean up after explosion finishes
+          setBoom(null);
         }, 520);
       }
     };
@@ -212,31 +211,16 @@ export default function CometLayer({ event, durationMs = 900, zIndex = 1 }) {
 
   if (!visible) return null;
 
-  // Tail should be behind the head along tangent.
-  // We don’t have ctrl/end here (computed in tick), so approximate using last known target point.
-  // It’s good enough visually because we normalize using current head and a nearby point.
-  let behind = { x: -1, y: 0 };
-  try {
-    if (event?.start && event?.targetId && typeof document !== "undefined") {
-      const end = getTargetPoint(event.targetId);
-      if (end) {
-        const d = Math.hypot(end.x - event.start.x, end.y - event.start.y);
-        const lift = clamp(d * 0.35, 120, 320);
-        const mid = {
-          x: (event.start.x + end.x) / 2,
-          y: (event.start.y + end.y) / 2,
-        };
-        const ctrl = { x: mid.x, y: mid.y - lift };
-        const tng = normalize(quadTangent(event.start, ctrl, end, progress));
-        behind = { x: -tng.x, y: -tng.y };
-      }
-    }
-  } catch {
-    // ignore
-  }
+  const safe = (n) => (Number.isFinite(n) ? n : -9999);
 
-  const tail1 = { x: head.x + behind.x * 18, y: head.y + behind.y * 18 };
-  const tail2 = { x: head.x + behind.x * 36, y: head.y + behind.y * 36 };
+  const tail1 = {
+    x: safe(head.x + behind.x * 18),
+    y: safe(head.y + behind.y * 18),
+  };
+  const tail2 = {
+    x: safe(head.x + behind.x * 36),
+    y: safe(head.y + behind.y * 36),
+  };
 
   return (
     <svg
@@ -253,28 +237,21 @@ export default function CometLayer({ event, durationMs = 900, zIndex = 1 }) {
       preserveAspectRatio="none"
     >
       <defs>
+        {/* gold trail gradient */}
         <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor={theme.palette.primary.main} />
-          <stop offset="100%" stopColor={theme.palette.secondary.main} />
+          <stop offset="0%" stopColor="#FFF2B2" />
+          <stop offset="35%" stopColor="#FFD36A" />
+          <stop offset="70%" stopColor="#FFB02E" />
+          <stop offset="100%" stopColor="#FF7A18" />
         </linearGradient>
 
+        {/* fiery head */}
         <radialGradient id={`${gradientId}-head`} cx="35%" cy="35%" r="65%">
           <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
-          <stop
-            offset="35%"
-            stopColor={theme.palette.secondary.main}
-            stopOpacity="0.95"
-          />
-          <stop
-            offset="75%"
-            stopColor={theme.palette.primary.main}
-            stopOpacity="0.55"
-          />
-          <stop
-            offset="100%"
-            stopColor={theme.palette.primary.main}
-            stopOpacity="0"
-          />
+          <stop offset="25%" stopColor="#FFF6C7" stopOpacity="0.98" />
+          <stop offset="55%" stopColor="#FFCC55" stopOpacity="0.9" />
+          <stop offset="80%" stopColor="#FF9A1F" stopOpacity="0.65" />
+          <stop offset="100%" stopColor="#FF6A00" stopOpacity="0" />
         </radialGradient>
 
         <filter id={glowId} x="-80%" y="-80%" width="260%" height="260%">
@@ -299,41 +276,41 @@ export default function CometLayer({ event, durationMs = 900, zIndex = 1 }) {
       {/* soft glowing trail */}
       <path
         ref={trailRef}
-        d=""
+        d={currentD}
         fill="none"
         stroke={`url(#${gradientId})`}
         strokeWidth="10"
         strokeLinecap="round"
-        opacity="0.25"
+        opacity="0.28"
         filter={`url(#${glowId})`}
       />
 
       {/* main trail */}
       <path
         ref={pathRef}
-        d=""
+        d={currentD}
         fill="none"
         stroke={`url(#${gradientId})`}
         strokeWidth="4"
         strokeLinecap="round"
-        opacity="0.8"
+        opacity="0.85"
       />
 
-      {/* tail blobs behind head */}
+      {/* tail blobs */}
       <circle
         cx={tail2.x}
         cy={tail2.y}
-        r={14}
-        fill={`url(#${gradientId}-head)`}
-        opacity={0.14}
+        r={16}
+        fill="#FFB02E"
+        opacity={0.24}
         filter={`url(#${glowId})`}
       />
       <circle
         cx={tail1.x}
         cy={tail1.y}
-        r={10}
-        fill={`url(#${gradientId}-head)`}
-        opacity={0.22}
+        r={12}
+        fill="#FFD36A"
+        opacity={0.38}
         filter={`url(#${glowId})`}
       />
 
@@ -343,7 +320,7 @@ export default function CometLayer({ event, durationMs = 900, zIndex = 1 }) {
         cy={head.y}
         r={22 + 10 * progress}
         fill={`url(#${gradientId}-head)`}
-        opacity={0.16 + 0.24 * progress}
+        opacity={0.18 + 0.26 * progress}
         filter={`url(#${glowId})`}
       />
 
@@ -356,19 +333,17 @@ export default function CometLayer({ event, durationMs = 900, zIndex = 1 }) {
         opacity="0.95"
       />
 
-      {/* colored shell */}
+      {/* shell */}
       <circle
         cx={head.x}
         cy={head.y}
         r={12 + 4 * progress}
         fill={`url(#${gradientId}-head)`}
-        opacity="0.85"
+        opacity="0.88"
         filter={`url(#${glowId})`}
       />
-      {/* Explosion burst */}
-      {boom ? (
-        <ExplosionBurst boom={boom} gradientId={gradientId} glowId={glowId} />
-      ) : null}
+
+      {boom ? <ExplosionBurst boom={boom} gradientId={gradientId} glowId={glowId} /> : null}
     </svg>
   );
 }
@@ -380,7 +355,7 @@ function ExplosionBurst({ boom, gradientId, glowId }) {
   const sparks = useMemo(() => makeSparks(14, boom.seed), [boom.seed]);
 
   useEffect(() => {
-    const D = 420; // duration ms
+    const D = 420;
     const tick = (now) => {
       const p = clamp((now - boom.startTs) / D, 0, 1);
       setT(p);
@@ -390,13 +365,11 @@ function ExplosionBurst({ boom, gradientId, glowId }) {
     return () => raf.current && cancelAnimationFrame(raf.current);
   }, [boom.startTs]);
 
-  // Ease out so it pops then softens
   const eased = 1 - Math.pow(1 - t, 3);
   const fade = 1 - t;
 
   return (
     <g opacity={0.95}>
-      {/* central flash */}
       <circle
         cx={boom.x}
         cy={boom.y}
@@ -405,8 +378,6 @@ function ExplosionBurst({ boom, gradientId, glowId }) {
         opacity={0.35 * fade}
         filter={`url(#${glowId})`}
       />
-
-      {/* sparks */}
       {sparks.map((s, i) => {
         const d = s.v * eased;
         const x = boom.x + Math.cos(s.a) * d;
