@@ -43,14 +43,14 @@ export const getTheme = (themeName = "light") => {
           }
         : {
             primary: "#7CFF9E",
-            secondary: "#3CCF68",
+            secondary: "#44C76B",
           },
 
       divider: isLight
         ? "rgba(91, 46, 145, 0.14)"
         : isDark
         ? "rgba(188, 160, 255, 0.16)"
-        : "rgba(0, 255, 102, 0.22)",
+        : "rgba(0,255,102,0.22)",
     },
 
     typography: {
@@ -60,24 +60,24 @@ export const getTheme = (themeName = "light") => {
 
       h2: {
         fontWeight: 900,
-        letterSpacing: isRetro ? 1 : -0.5,
+        letterSpacing: isRetro ? 1.1 : -0.5,
         textTransform: isRetro ? "uppercase" : "none",
       },
       h4: {
         fontWeight: 900,
-        letterSpacing: isRetro ? 0.8 : -0.3,
+        letterSpacing: isRetro ? 0.9 : -0.3,
         textTransform: isRetro ? "uppercase" : "none",
+      },
+      button: {
+        textTransform: isRetro ? "uppercase" : "none",
+        fontWeight: 700,
+        letterSpacing: isRetro ? 0.8 : 0,
       },
       body1: {
         lineHeight: isRetro ? 1.7 : 1.5,
       },
       body2: {
         lineHeight: isRetro ? 1.7 : 1.43,
-      },
-      button: {
-        textTransform: isRetro ? "uppercase" : "none",
-        fontWeight: 700,
-        letterSpacing: isRetro ? 1 : 0,
       },
     },
 
@@ -90,12 +90,9 @@ export const getTheme = (themeName = "light") => {
         styleOverrides: {
           body: {
             ...(isRetro && {
-              backgroundImage: `
-                radial-gradient(circle at top, rgba(0,255,102,0.05), transparent 35%),
-                linear-gradient(rgba(0,255,102,0.035) 1px, transparent 1px)
-              `,
-              backgroundSize: "100% 100%, 100% 3px",
               textShadow: "0 0 4px rgba(0,255,102,0.25)",
+              backgroundImage:
+                "radial-gradient(circle at top, rgba(0,255,102,0.04), transparent 30%)",
             }),
           },
         },
@@ -105,12 +102,6 @@ export const getTheme = (themeName = "light") => {
         styleOverrides: {
           root: {
             backdropFilter: isRetro ? "none" : "blur(10px)",
-            ...(isRetro && {
-              backgroundImage:
-                "linear-gradient(to bottom, rgba(0,255,102,0.08), rgba(0,0,0,0.85))",
-              borderBottom: "1px solid rgba(0,255,102,0.35)",
-              boxShadow: "0 0 12px rgba(0,255,102,0.12)",
-            }),
           },
         },
       },
@@ -120,53 +111,10 @@ export const getTheme = (themeName = "light") => {
           root: {
             borderRadius: isRetro ? 0 : 18,
             ...(isRetro && {
-              backgroundColor: "#081108",
-              border: "1px solid rgba(0,255,102,0.25)",
-              boxShadow: "0 0 10px rgba(0,255,102,0.08)",
+              border: "1px solid rgba(0,255,102,0.22)",
               backgroundImage:
                 "linear-gradient(to bottom, rgba(0,255,102,0.03), rgba(0,0,0,0.08))",
-            }),
-          },
-        },
-      },
-
-      MuiPaper: {
-        styleOverrides: {
-          root: {
-            ...(isRetro && {
-              backgroundImage:
-                "linear-gradient(to bottom, rgba(0,255,102,0.02), rgba(0,0,0,0.04))",
-            }),
-          },
-        },
-      },
-
-      MuiButton: {
-        styleOverrides: {
-          root: {
-            ...(isRetro && {
-              borderRadius: 0,
-              border: "1px solid rgba(0,255,102,0.35)",
-              boxShadow: "0 0 8px rgba(0,255,102,0.08)",
-            }),
-          },
-          containedPrimary: {
-            ...(isRetro && {
-              background: "#0B1A0E",
-              color: "#7CFF9E",
-              "&:hover": {
-                background: "#102513",
-                boxShadow: "0 0 12px rgba(0,255,102,0.18)",
-              },
-            }),
-          },
-          outlinedPrimary: {
-            ...(isRetro && {
-              borderColor: "#00FF66",
-              color: "#7CFF9E",
-              "&:hover": {
-                backgroundColor: "rgba(0,255,102,0.08)",
-              },
+              boxShadow: "0 0 10px rgba(0,255,102,0.05)",
             }),
           },
         },
@@ -200,24 +148,23 @@ export const getTheme = (themeName = "light") => {
               borderRadius: 0,
               color: "#7CFF9E",
               backgroundColor: "rgba(0,255,102,0.08)",
-              borderColor: "rgba(0,255,102,0.32)",
+              borderColor: "rgba(0,255,102,0.3)",
               fontWeight: 700,
-              textTransform: "uppercase",
-              letterSpacing: 0.8,
+              letterSpacing: 0.7,
             }),
 
             ...(isRetro &&
               ownerState.color === "secondary" && {
-                backgroundColor: "rgba(0,204,68,0.12)",
-                borderColor: "rgba(0,204,68,0.5)",
-                color: "#6BFF95",
+                backgroundColor: "rgba(0,204,68,0.10)",
+                borderColor: "rgba(0,204,68,0.42)",
+                color: "#84FFA9",
               }),
 
             ...(isRetro &&
               ownerState.color === "primary" && {
-                backgroundColor: "rgba(0,255,102,0.12)",
-                borderColor: "rgba(0,255,102,0.55)",
-                color: "#9BFFB8",
+                backgroundColor: "rgba(0,255,102,0.10)",
+                borderColor: "rgba(0,255,102,0.5)",
+                color: "#A6FFC0",
               }),
           }),
 
@@ -232,24 +179,31 @@ export const getTheme = (themeName = "light") => {
         },
       },
 
-      MuiDivider: {
+      MuiButton: {
         styleOverrides: {
           root: {
             ...(isRetro && {
-              borderColor: "rgba(0,255,102,0.18)",
+              borderRadius: 0,
+              boxShadow: "none",
             }),
           },
-        },
-      },
-
-      MuiLink: {
-        styleOverrides: {
-          root: {
+          containedPrimary: {
             ...(isRetro && {
+              background: "#0B1A0E",
               color: "#7CFF9E",
-              textDecorationColor: "rgba(124,255,158,0.45)",
+              border: "1px solid rgba(0,255,102,0.4)",
               "&:hover": {
-                textShadow: "0 0 6px rgba(0,255,102,0.45)",
+                background: "#102513",
+                boxShadow: "0 0 10px rgba(0,255,102,0.12)",
+              },
+            }),
+          },
+          outlinedPrimary: {
+            ...(isRetro && {
+              borderColor: "#00FF66",
+              color: "#7CFF9E",
+              "&:hover": {
+                backgroundColor: "rgba(0,255,102,0.08)",
               },
             }),
           },
