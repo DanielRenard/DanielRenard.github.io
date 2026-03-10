@@ -15,6 +15,7 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
+import MemoryIcon from "@mui/icons-material/Memory";
 import Tooltip from "@mui/material/Tooltip";
 
 function smoothScrollTo(targetY, duration = 1200) {
@@ -57,14 +58,12 @@ export default function Navbar({ sections, mode, onToggleMode, onNavigate }) {
   const scrollTo = (id) => {
     const el = document.getElementById(id);
     if (!el) return;
-    const y = el.getBoundingClientRect().top + window.scrollY - 96; // offset for AppBar height
+    const y = el.getBoundingClientRect().top + window.scrollY - 96;
 
-    smoothScrollTo(y, 1800); // slower = bigger number
-
+    smoothScrollTo(y, 1800);
     setOpen(false);
   };
 
-  // ✅ Track which section is currently visible
   useEffect(() => {
     const ids = sections.map((s) => s.id);
     const els = ids.map((id) => document.getElementById(id)).filter(Boolean);
@@ -82,7 +81,6 @@ export default function Navbar({ sections, mode, onToggleMode, onNavigate }) {
       },
       {
         threshold: [0.2, 0.35, 0.5, 0.65],
-        // Adjust for sticky navbar height so "active" feels right
         rootMargin: "-88px 0px -55% 0px",
       },
     );
@@ -91,18 +89,41 @@ export default function Navbar({ sections, mode, onToggleMode, onNavigate }) {
     return () => obs.disconnect();
   }, [sections]);
 
+  const toggleTitle =
+    mode === "light"
+      ? "Switch to dark mode"
+      : mode === "dark"
+      ? "Switch to retro mode"
+      : "Switch to light mode";
+
+  const toggleIcon =
+    mode === "light" ? (
+      <DarkModeIcon />
+    ) : mode === "dark" ? (
+      <MemoryIcon />
+    ) : (
+      <LightModeIcon />
+    );
+
+  const isRetro = mode === "retro";
+  const isLight = mode === "light";
+
   return (
     <>
       <AppBar
         position="sticky"
         elevation={0}
         sx={{
-          backdropFilter: "blur(10px)",
+          backdropFilter: isRetro ? "none" : "blur(10px)",
           backgroundColor: (theme) =>
-            theme.palette.mode === "light"
+            isRetro
+              ? "rgba(0, 12, 4, 0.94)"
+              : isLight
               ? "rgba(246, 244, 250, 0.78)"
               : "rgba(15, 11, 20, 0.72)",
           color: "text.primary",
+          borderBottom: isRetro ? "1px solid rgba(0,255,102,0.28)" : undefined,
+          boxShadow: isRetro ? "0 0 14px rgba(0,255,102,0.08)" : "none",
         }}
       >
         <Toolbar sx={{ borderBottom: "1px solid", borderColor: "divider" }}>
@@ -110,11 +131,18 @@ export default function Navbar({ sections, mode, onToggleMode, onNavigate }) {
             maxWidth="lg"
             sx={{ display: "flex", alignItems: "center", gap: 1.5 }}
           >
-            <Typography variant="h6" sx={{ fontWeight: 900, flexGrow: 1 }}>
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: 900,
+                flexGrow: 1,
+                letterSpacing: isRetro ? 1.5 : 0,
+                textTransform: isRetro ? "uppercase" : "none",
+              }}
+            >
               Resume
             </Typography>
 
-            {/* Desktop nav */}
             <Box
               sx={{
                 display: { xs: "none", md: "flex" },
@@ -136,23 +164,26 @@ export default function Navbar({ sections, mode, onToggleMode, onNavigate }) {
                     sx={{
                       position: "relative",
                       px: 1.2,
-                      borderRadius: 999,
+                      borderRadius: isRetro ? 0 : 999,
                       transition:
                         "transform 180ms ease, background-color 180ms ease",
                       backgroundColor: isActive
                         ? (theme) =>
-                            theme.palette.mode === "light"
-                              ? "rgba(46,125,50,0.10)" // green tint (light)
-                              : "rgba(46,125,50,0.18)" // green tint (dark)
+                            isRetro
+                              ? "rgba(0,255,102,0.10)"
+                              : theme.palette.mode === "light"
+                              ? "rgba(46,125,50,0.10)"
+                              : "rgba(46,125,50,0.18)"
                         : "transparent",
                       "&:hover": {
                         backgroundColor: (theme) =>
-                          theme.palette.mode === "light"
-                            ? "rgba(91,46,145,0.08)" // purple tint hover
+                          isRetro
+                            ? "rgba(0,255,102,0.08)"
+                            : theme.palette.mode === "light"
+                            ? "rgba(91,46,145,0.08)"
                             : "rgba(188,160,255,0.10)",
                         transform: "translateY(-1px)",
                       },
-                      // ✅ Animated underline using theme primary→secondary gradient
                       "&::after": {
                         content: '""',
                         position: "absolute",
@@ -160,9 +191,11 @@ export default function Navbar({ sections, mode, onToggleMode, onNavigate }) {
                         right: 10,
                         bottom: 6,
                         height: 3,
-                        borderRadius: 999,
+                        borderRadius: isRetro ? 0 : 999,
                         background: (theme) =>
-                          `linear-gradient(90deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+                          isRetro
+                            ? "linear-gradient(90deg, rgba(0,255,102,0.2), #00ff66, rgba(0,255,102,0.2))"
+                            : `linear-gradient(90deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
                         transform: isActive ? "scaleX(1)" : "scaleX(0)",
                         transformOrigin: "left",
                         transition: "transform 220ms ease",
@@ -175,28 +208,25 @@ export default function Navbar({ sections, mode, onToggleMode, onNavigate }) {
               })}
             </Box>
 
-            {/* Dark mode toggle */}
-            <Tooltip
-              title={
-                mode === "dark" ? "Switch to light mode" : "Switch to dark mode"
-              }
-            >
+            <Tooltip title={toggleTitle}>
               <IconButton
                 color="inherit"
                 onClick={onToggleMode}
                 sx={{
                   ml: 0.5,
                   border: "1px solid",
-                  borderColor: "divider",
-                  borderRadius: 999,
+                  borderColor: isRetro ? "primary.main" : "divider",
+                  borderRadius: isRetro ? 0 : 999,
+                  boxShadow: isRetro
+                    ? "0 0 10px rgba(0,255,102,0.08)"
+                    : "none",
                 }}
-                aria-label="Toggle dark mode"
+                aria-label="Toggle theme"
               >
-                {mode === "dark" ? <LightModeIcon /> : <DarkModeIcon />}
+                {toggleIcon}
               </IconButton>
             </Tooltip>
 
-            {/* Mobile menu button (you were missing this) */}
             <IconButton
               sx={{ display: { xs: "inline-flex", md: "none" } }}
               color="inherit"
@@ -209,9 +239,15 @@ export default function Navbar({ sections, mode, onToggleMode, onNavigate }) {
         </Toolbar>
       </AppBar>
 
-      {/* Mobile drawer */}
       <Drawer anchor="right" open={open} onClose={() => setOpen(false)}>
-        <Box sx={{ width: 280 }}>
+        <Box
+          sx={{
+            width: 280,
+            bgcolor: "background.paper",
+            color: "text.primary",
+            height: "100%",
+          }}
+        >
           <List>
             {items.map((it) => (
               <ListItemButton
@@ -220,10 +256,16 @@ export default function Navbar({ sections, mode, onToggleMode, onNavigate }) {
                 selected={it.id === activeId}
                 sx={{
                   "&.Mui-selected": {
-                    backgroundColor: "rgba(46,125,50,0.12)", // green tint
+                    backgroundColor:
+                      mode === "retro"
+                        ? "rgba(0,255,102,0.12)"
+                        : "rgba(46,125,50,0.12)",
                   },
                   "&.Mui-selected:hover": {
-                    backgroundColor: "rgba(46,125,50,0.18)",
+                    backgroundColor:
+                      mode === "retro"
+                        ? "rgba(0,255,102,0.18)"
+                        : "rgba(46,125,50,0.18)",
                   },
                 }}
               >

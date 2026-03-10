@@ -50,16 +50,16 @@ export default function App() {
 
   const prefersDark = useMediaQuery("(prefers-color-scheme: dark)");
 
-  const [mode, setMode] = React.useState(() => {
+  const [themeName, setThemeName] = React.useState(() => {
     const saved = localStorage.getItem("themeMode");
     return saved ? saved : prefersDark ? "dark" : "light";
   });
 
   React.useEffect(() => {
-    localStorage.setItem("themeMode", mode);
-  }, [mode]);
+    localStorage.setItem("themeMode", themeName);
+  }, [themeName]);
 
-  const theme = React.useMemo(() => getTheme(mode), [mode]);
+  const theme = React.useMemo(() => getTheme(themeName), [themeName]);
 
   const avatarRef = React.useRef(null);
   const [cometEvent, setCometEvent] = React.useState(null);
@@ -76,7 +76,6 @@ export default function App() {
 
     const r = targetEl.getBoundingClientRect();
 
-    // Land on top-left INSIDE the section (padding-safe)
     const end = {
       x: r.left + 24,
       y: r.top + 24,
@@ -87,12 +86,20 @@ export default function App() {
     const start =
       clickPos && window.innerWidth >= 900
         ? clickPos
-        : (avatarCenter ?? clickPos ?? { x: 24, y: 24 });
+        : avatarCenter ?? clickPos ?? { x: 24, y: 24 };
 
     setCometEvent({
       start,
       targetId: sectionId,
       id: `${sectionId}-${Date.now()}`,
+    });
+  };
+
+  const handleToggleTheme = () => {
+    setThemeName((prev) => {
+      if (prev === "light") return "dark";
+      if (prev === "dark") return "retro";
+      return "light";
     });
   };
 
@@ -110,10 +117,8 @@ export default function App() {
 
         <Navbar
           sections={sections}
-          mode={mode}
-          onToggleMode={() =>
-            setMode((m) => (m === "light" ? "dark" : "light"))
-          }
+          mode={themeName}
+          onToggleMode={handleToggleTheme}
           onNavigate={handleNavigate}
         />
 
@@ -123,7 +128,9 @@ export default function App() {
           sx={{
             py: { xs: 6, md: 9 },
             background: (t) =>
-              `linear-gradient(135deg, ${t.palette.primary.main}12, ${t.palette.secondary.main}12)`,
+              themeName === "retro"
+                ? `linear-gradient(180deg, rgba(0,255,102,0.08), rgba(0,0,0,0.12))`
+                : `linear-gradient(135deg, ${t.palette.primary.main}12, ${t.palette.secondary.main}12)`,
             borderBottom: "1px solid",
             borderColor: "divider",
           }}
@@ -143,7 +150,13 @@ export default function App() {
                       width: 180,
                       height: 180,
                       border: "3px solid",
-                      borderColor: "secondary.main",
+                      borderColor:
+                        themeName === "retro" ? "primary.main" : "secondary.main",
+                      boxShadow:
+                        themeName === "retro"
+                          ? "0 0 18px rgba(0,255,102,0.22)"
+                          : "none",
+                      filter: themeName === "retro" ? "grayscale(0.2)" : "none",
                     }}
                   />
                   <ContactChips contact={contact} />
@@ -198,7 +211,6 @@ export default function App() {
           </Container>
         </Box>
 
-        {/* ABOUT */}
         <Section
           id="about"
           title="About Me"
@@ -213,7 +225,7 @@ export default function App() {
                   width: 80,
                   borderBottomWidth: 4,
                   borderColor: "secondary.main",
-                  borderRadius: 999,
+                  borderRadius: themeName === "retro" ? 0 : 999,
                 }}
               />
               <Typography>
@@ -236,7 +248,6 @@ export default function App() {
           </Card>
         </Section>
 
-        {/* EDUCATION & TRAINING */}
         <Section
           id="education"
           title="Education & Training"
@@ -253,7 +264,7 @@ export default function App() {
                   width: 64,
                   borderBottomWidth: 4,
                   borderColor: "secondary.main",
-                  borderRadius: 999,
+                  borderRadius: themeName === "retro" ? 0 : 999,
                 }}
               />
               <Stack spacing={2}>
@@ -287,7 +298,7 @@ export default function App() {
                   width: 64,
                   borderBottomWidth: 4,
                   borderColor: "secondary.main",
-                  borderRadius: 999,
+                  borderRadius: themeName === "retro" ? 0 : 999,
                 }}
               />
               <Stack spacing={2}>
@@ -313,7 +324,6 @@ export default function App() {
           </Grid>
         </Section>
 
-        {/* PROJECTS */}
         <Section
           id="projects"
           title="Projects"
@@ -377,7 +387,6 @@ export default function App() {
           </Grid>
         </Section>
 
-        {/* EXPERIENCE */}
         <Section
           id="experience"
           title="Work Experience"
@@ -404,7 +413,6 @@ export default function App() {
           </Stack>
         </Section>
 
-        {/* YOUTUBE */}
         <Section
           id="youtube"
           title="YouTube Playlist"
@@ -414,7 +422,6 @@ export default function App() {
           <YoutubeEmbed playlistId={contact.youtubePlaylistId} />
         </Section>
 
-        {/* CONTACT */}
         <Section
           id="contact"
           title="Contact"
