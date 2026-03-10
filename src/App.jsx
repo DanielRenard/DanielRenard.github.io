@@ -22,7 +22,7 @@ import Section from "./components/Section";
 import Footer from "./components/Footer";
 import ContactChips from "./components/ContactChips";
 import YoutubeEmbed from "./components/YoutubeEmbed";
-import CometLayer from "./components/CometLayer";
+// import CometLayer from "./components/CometLayer";
 
 import { getTheme } from "./theme";
 
@@ -62,7 +62,7 @@ export default function App() {
   const theme = React.useMemo(() => getTheme(themeName), [themeName]);
 
   const avatarRef = React.useRef(null);
-  const [cometEvent, setCometEvent] = React.useState(null);
+  // const [cometEvent, setCometEvent] = React.useState(null);
 
   const getCenter = (el) => {
     const r = el?.getBoundingClientRect?.();
@@ -81,11 +81,11 @@ export default function App() {
         ? clickPos
         : getCenter(avatarRef.current) ?? clickPos ?? { x: 24, y: 24 };
 
-    setCometEvent({
-      start,
-      targetId: sectionId,
-      id: `${sectionId}-${Date.now()}`,
-    });
+    // setCometEvent({
+    //   start,
+    //   targetId: sectionId,
+    //   id: `${sectionId}-${Date.now()}`,
+    // });
   };
 
   const isRetro = themeName === "retro";
@@ -100,7 +100,6 @@ export default function App() {
           bgcolor: "background.default",
           color: "text.primary",
           position: "relative",
-          overflowX: "hidden",
         }}
       >
         {isRetro && (
@@ -131,7 +130,7 @@ export default function App() {
           </>
         )}
 
-        <CometLayer event={cometEvent} zIndex={2} />
+        {/* <CometLayer event={cometEvent} zIndex={2} /> */}
 
         <Navbar
           sections={sections}

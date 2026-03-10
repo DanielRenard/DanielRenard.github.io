@@ -106,12 +106,13 @@ export default function Navbar({
         position="sticky"
         elevation={0}
         sx={{
+          zIndex: (theme) => theme.zIndex.drawer + 1,
           backdropFilter: isRetro ? "none" : "blur(10px)",
           backgroundColor: isRetro
             ? "rgba(0, 12, 4, 0.94)"
             : isLight
-            ? "rgba(246, 244, 250, 0.78)"
-            : "rgba(15, 11, 20, 0.72)",
+              ? "rgba(246, 244, 250, 0.78)"
+              : "rgba(15, 11, 20, 0.72)",
           color: "text.primary",
           borderBottom: "1px solid",
           borderColor: "divider",
@@ -162,7 +163,7 @@ export default function Navbar({
                       backgroundColor: isActive
                         ? isRetro
                           ? "rgba(0,255,102,0.10)"
-                          : theme =>
+                          : (theme) =>
                               theme.palette.mode === "light"
                                 ? "rgba(46,125,50,0.10)"
                                 : "rgba(46,125,50,0.18)"
@@ -170,7 +171,7 @@ export default function Navbar({
                       "&:hover": {
                         backgroundColor: isRetro
                           ? "rgba(0,255,102,0.08)"
-                          : theme =>
+                          : (theme) =>
                               theme.palette.mode === "light"
                                 ? "rgba(91,46,145,0.08)"
                                 : "rgba(188,160,255,0.10)",
@@ -184,7 +185,7 @@ export default function Navbar({
                         bottom: 6,
                         height: 3,
                         borderRadius: isRetro ? 0 : 999,
-                        background: theme =>
+                        background: (theme) =>
                           isRetro
                             ? "linear-gradient(90deg, rgba(0,255,102,0.2), #00ff66, rgba(0,255,102,0.2))"
                             : `linear-gradient(90deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
@@ -266,9 +267,7 @@ export default function Navbar({
             p: 1,
           }}
         >
-          <Typography sx={{ px: 1, py: 1, fontWeight: 800 }}>
-            Theme
-          </Typography>
+          <Typography sx={{ px: 1, py: 1, fontWeight: 800 }}>Theme</Typography>
 
           <Stack direction="column" spacing={1} sx={{ px: 1, pb: 2 }}>
             {themeOptions.map((option) => {
