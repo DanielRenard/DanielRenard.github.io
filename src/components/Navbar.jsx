@@ -46,6 +46,9 @@ const themeOptions = [
   { value: "retro", label: "Retro", icon: <MemoryIcon fontSize="small" /> },
 ];
 
+const NAV_OFFSET = 96;
+const ACTIVE_OFFSET = 120;
+
 export default function Navbar({
   sections,
   themeName,
@@ -67,34 +70,76 @@ export default function Navbar({
   const scrollTo = (id) => {
     const el = document.getElementById(id);
     if (!el) return;
-    const y = el.getBoundingClientRect().top + window.scrollY - 96;
+
+    const y = el.getBoundingClientRect().top + window.scrollY - NAV_OFFSET;
     smoothScrollTo(y, 1800);
     setOpen(false);
   };
 
   useEffect(() => {
-    const ids = sections.map((s) => s.id);
-    const els = ids.map((id) => document.getElementById(id)).filter(Boolean);
-    if (!els.length) return;
+    const getSectionPositions = () =>
+      sections
+        .map((s) => {
+          const el = document.getElementById(s.id);
+          if (!el) return null;
 
-    const obs = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort(
-            (a, b) => (b.intersectionRatio ?? 0) - (a.intersectionRatio ?? 0),
-          )[0];
+          return {
+            id: s.id,
+            top: el.offsetTop,
+          };
+        })
+        .filter(Boolean);
 
-        if (visible?.target?.id) setActiveId(visible.target.id);
-      },
-      {
-        threshold: [0.2, 0.35, 0.5, 0.65],
-        rootMargin: "-88px 0px -55% 0px",
-      },
-    );
+    let ticking = false;
 
-    els.forEach((el) => obs.observe(el));
-    return () => obs.disconnect();
+    const updateActiveSection = () => {
+      const sectionPositions = getSectionPositions();
+
+      if (!sectionPositions.length) {
+        ticking = false;
+        return;
+      }
+
+      const scrollPosition = window.scrollY + ACTIVE_OFFSET;
+
+      const nearBottom =
+        window.innerHeight + window.scrollY >= document.body.offsetHeight - 8;
+
+      if (nearBottom) {
+        setActiveId(sectionPositions[sectionPositions.length - 1].id);
+        ticking = false;
+        return;
+      }
+
+      let current = sectionPositions[0].id;
+
+      for (const section of sectionPositions) {
+        if (scrollPosition >= section.top) {
+          current = section.id;
+        } else {
+          break;
+        }
+      }
+
+      setActiveId(current);
+      ticking = false;
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateActiveSection);
+        ticking = true;
+      }
+    };
+
+    updateActiveSection();
+    window.addEventListener("scroll", onScroll);
+    window.addEventListener("resize", updateActiveSection);
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", updateActiveSection);
+    };
   }, [sections]);
 
   const isRetro = themeName === "retro";
@@ -111,8 +156,8 @@ export default function Navbar({
           backgroundColor: isRetro
             ? "rgba(0, 12, 4, 0.94)"
             : isLight
-              ? "rgba(246, 244, 250, 0.78)"
-              : "rgba(15, 11, 20, 0.72)",
+            ? "rgba(246, 244, 250, 0.78)"
+            : "rgba(15, 11, 20, 0.72)",
           color: "text.primary",
           borderBottom: "1px solid",
           borderColor: "divider",
