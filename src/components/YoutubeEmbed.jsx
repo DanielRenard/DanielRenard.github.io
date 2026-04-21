@@ -17,7 +17,7 @@ export default function YoutubeEmbed({ playlistId }) {
       <Box
         component="iframe"
         title="YouTube Playlist"
-        src={`https://www.youtube.com/embed/videoseries?list=${playlistId}`}
+        src={`https://www.youtube.com/embed/videoseries?list=${playlistId}&controls=1&rel=0&modestbranding=1`}
         sx={{
           position: "absolute",
           inset: 0,

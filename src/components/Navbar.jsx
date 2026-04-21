@@ -17,6 +17,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import MemoryIcon from "@mui/icons-material/Memory";
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 
 function smoothScrollTo(targetY, duration = 1200) {
   const startY = window.scrollY;
@@ -44,6 +45,11 @@ const themeOptions = [
   { value: "light", label: "Light", icon: <LightModeIcon fontSize="small" /> },
   { value: "dark", label: "Dark", icon: <DarkModeIcon fontSize="small" /> },
   { value: "retro", label: "Retro", icon: <MemoryIcon fontSize="small" /> },
+  {
+    value: "lisaFrank",
+    label: "Lisa",
+    icon: <AutoAwesomeIcon fontSize="small" />,
+  },
 ];
 
 const NAV_OFFSET = 96;
@@ -144,6 +150,7 @@ export default function Navbar({
 
   const isRetro = themeName === "retro";
   const isLight = themeName === "light";
+  const isLisa = themeName === "lisaFrank";
 
   return (
     <>
@@ -152,16 +159,7 @@ export default function Navbar({
         elevation={0}
         sx={{
           zIndex: (theme) => theme.zIndex.drawer + 1,
-          backdropFilter: isRetro ? "none" : "blur(10px)",
-          backgroundColor: isRetro
-            ? "rgba(0, 12, 4, 0.94)"
-            : isLight
-            ? "rgba(246, 244, 250, 0.78)"
-            : "rgba(15, 11, 20, 0.72)",
-          color: "text.primary",
-          borderBottom: "1px solid",
-          borderColor: "divider",
-          boxShadow: isRetro ? "0 0 14px rgba(0,255,102,0.08)" : "none",
+          color: "primary.contrastText",
         }}
       >
         <Toolbar>
@@ -256,7 +254,12 @@ export default function Navbar({
                 border: "1px solid",
                 borderColor: "divider",
                 borderRadius: isRetro ? 0 : 999,
-                backgroundColor: "background.paper",
+                backgroundColor: (theme) =>
+                  theme.palette.mode === "light"
+                    ? "rgba(91,46,145,0.25)"
+                    : "rgba(255,255,255,0.06)",
+                backdropFilter: "blur(8px)",
+                boxShadow: "0 0 12px rgba(0,0,0,0.15)",
               }}
             >
               {themeOptions.map((option) => {
@@ -333,9 +336,15 @@ export default function Navbar({
                     backgroundColor: selected
                       ? isRetro
                         ? "rgba(0,255,102,0.12)"
-                        : "action.selected"
+                        : isLisa
+                          ? "rgba(255,79,216,0.18)"
+                          : "action.selected"
                       : "transparent",
                     textTransform: isRetro ? "uppercase" : "none",
+                    boxShadow:
+                      selected && isLisa
+                        ? "0 0 12px rgba(255,79,216,0.6)"
+                        : "none",
                   }}
                 >
                   {option.label}

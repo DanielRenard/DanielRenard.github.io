@@ -24,6 +24,7 @@ import ContactChips from "./components/ContactChips";
 import YoutubeEmbed from "./components/YoutubeEmbed";
 // import CometLayer from "./components/CometLayer";
 import SocialFeed from "./components/SocialFeed";
+import YoutubeShowcase from "./components/YoutubeShowcase";
 
 import { getTheme } from "./theme";
 
@@ -284,7 +285,8 @@ export default function App() {
             subtitle="This playlist features some of my production experiences. This includes the 2023 Louisiana Gornernor Debate, interviews shot with a robotic camera setup in a small studio, and short documentaries from my time in film school."
             variant="tintGreen"
           >
-            <YoutubeEmbed playlistId={contact.youtubePlaylistId} />
+            <YoutubeShowcase />
+            {/* <YoutubeEmbed playlistId={contact.youtubePlaylistId} /> */}
           </Section>
 
           <Section

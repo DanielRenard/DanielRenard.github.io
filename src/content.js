@@ -147,3 +147,46 @@ export const contact = {
   tumblr: "https://djrenard.tumblr.com/",
   instagram: "https://www.instagram.com/leinaddraner/",
 };
+
+export const videos = [
+  {
+    id: "uuQeONlElAK4",
+    title: "Maison de Granny",
+    thumbnail: "https://img.youtube.com/vi/uQeONlElAK4/mqdefault.jpg"
+  },
+  {
+    id: "XE71oAyo0t0",
+    title: "Happy 60th Anniversary",
+    thumbnail: "https://img.youtube.com/vi/XE71oAyo0t0/mqdefault.jpg"
+  },
+  {
+    id: "OiakNuw469U",
+    title: "2023 Louisiana Governor Primary Debate",
+    thumbnail: "https://img.youtube.com/vi/OiakNuw469U/mqdefault.jpg"
+  },
+    {
+    id: "sRD4iL56dOA",
+    title: "LARC's Mardi Gras Bead Store extending business hours",
+    thumbnail: "https://img.youtube.com/vi/sRD4iL56dOA/mqdefault.jpg"
+  },
+    {
+    id: "kSRn7D4_mJg",
+    title: "Hilliard Art Museum",
+    thumbnail: "https://img.youtube.com/vi/kSRn7D4_mJg/mqdefault.jpg"
+  },
+    {
+    id: "I8SISeiVBog",
+    title: "33rd Annual World Championship Gumbo Cookoff returns",
+    thumbnail: "https://img.youtube.com/vi/I8SISeiVBog/mqdefault.jpg"
+  },
+    {
+    id: "k80H2atjxps",
+    title: "Creole Heritage Month Exhibit",
+    thumbnail: "https://img.youtube.com/vi/k80H2atjxps/mqdefault.jpg"
+  },
+    {
+    id: "Gik-ne2kQM8",
+    title: "Raising Awareness for Friedreichs Ataxia",
+    thumbnail: "https://img.youtube.com/vi/Gik-ne2kQM8/mqdefault.jpg"
+  }
+];
