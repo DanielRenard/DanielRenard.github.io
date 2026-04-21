@@ -3,6 +3,8 @@ import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import EmailIcon from "@mui/icons-material/Email";
 import YouTubeIcon from "@mui/icons-material/YouTube";
+import LanguageIcon from "@mui/icons-material/Language";
+import InstagramIcon from "@mui/icons-material/Instagram";
 
 export default function ContactChips({ contact }) {
   const theme = useTheme();
@@ -106,6 +108,21 @@ export default function ContactChips({ contact }) {
         label="YouTube"
         clickable
         onClick={() => open(contact.youtube)}
+        sx={chipSx("primary")}
+      />
+      <Chip
+        icon={<LanguageIcon />}
+        label="Tumblr"
+        clickable
+        onClick={() => open(contact.tumblr)}
+        sx={chipSx("secondary")}
+      />
+      <Chip
+        icon={<InstagramIcon />}
+        label="Instagram"
+        clickable={has(contact?.instagram)}
+        disabled={!has(contact?.instagram)}
+        onClick={() => contact?.instagram && open(contact.instagram)}
         sx={chipSx("primary")}
       />
     </Stack>

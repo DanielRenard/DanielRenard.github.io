@@ -144,4 +144,6 @@ export const contact = {
   github: "https://github.com/DanielRenard",
   youtube: "https://www.youtube.com/channel/UC3kWtsJTNsPsCRWaA7PTA_Q",
   youtubePlaylistId: "PLH4WqIE-aKbzX14gwKyAMiB0CI4yUAWwF",
+  tumblr: "https://djrenard.tumblr.com/",
+  instagram: "https://www.instagram.com/leinaddraner/",
 };
