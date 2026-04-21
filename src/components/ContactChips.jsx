@@ -11,7 +11,7 @@ export default function ContactChips({ contact }) {
   const isDark = theme.palette.mode === "dark";
 
   const open = (url) => window.open(url, "_blank", "noopener,noreferrer");
-
+  const has = (v) => Boolean(v && v.trim?.());
   // High-contrast chip styling (especially for dark mode)
   const chipSx = (kind) => {
     // kind: "primary" | "secondary" | "neutral"
