@@ -178,7 +178,7 @@ export default function Navbar({
                 textTransform: isRetro ? "uppercase" : "none",
               }}
             >
-              Resume
+              Renard
             </Typography>
 
             <Box
