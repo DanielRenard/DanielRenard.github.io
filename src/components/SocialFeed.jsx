@@ -17,7 +17,8 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 
 const TUMBLR_RSS = "https://djrenard.tumblr.com/rss";
-const RSS_TO_JSON = `https://api.rss2json.com/v1/api.json?rss_url=${TUMBLR_RSS}`;
+const cacheBust = Math.floor(Date.now() / (1000 * 60 * 60));
+const RSS_TO_JSON = `https://api.rss2json.com/v1/api.json?rss_url=${TUMBLR_RSS}&v=${cacheBust}`;
 
 const CACHE_KEY = "socialFeedCache_v3";
 const CACHE_TIME = 1000 * 60 * 10; // 10 min
@@ -48,27 +49,35 @@ const SocialFeed = () => {
   // -------- TUMBLR --------
   const fetchTumblrPosts = async () => {
     try {
-      const res = await fetch(RSS_TO_JSON);
-      const data = await res.json();
+      const res = await fetch(
+        "https://api.allorigins.win/raw?url=" +
+          encodeURIComponent("https://djrenard.tumblr.com/rss"),
+      );
+      const text = await res.text();
 
-      return data.items.map((item) => {
-        const safeDate = item.pubDate
-          ? new Date(item.pubDate.replace(" ", "T") + "Z").toISOString()
-          : new Date().toISOString();
+      const parser = new DOMParser();
+      const xml = parser.parseFromString(text, "text/xml");
+      const items = Array.from(xml.querySelectorAll("item"));
+
+      return items.map((item) => {
+        const title = item.querySelector("title")?.textContent || "Untitled";
+        const link = item.querySelector("link")?.textContent || "";
+        const pubDate = item.querySelector("pubDate")?.textContent;
+        const content = item.querySelector("description")?.textContent || "";
+
+        const match = content.match(/<img[^>]+src="([^">]+)"/);
+        const image = match ? match[1] : "";
 
         return {
           source: "tumblr",
-          title: item.title || "Untitled",
-          link: item.link,
-          date: safeDate,
-          image:
-            item.thumbnail ||
-            item.enclosure?.link ||
-            extractImageFromContent(item.content),
+          title,
+          link,
+          date: new Date(pubDate).toISOString(),
+          image,
         };
       });
     } catch (err) {
-      console.error("Tumblr fetch failed:", err);
+      console.error("Tumblr RSS fetch failed:", err);
       return [];
     }
   };
@@ -94,7 +103,7 @@ const SocialFeed = () => {
 
     console.log("Tumblr count:", tumblr.length);
 
-    const combined = [...tumblr,]
+    const combined = [...tumblr]
       .filter((post) => !isNaN(new Date(post.date))) // remove bad dates
       .sort((a, b) => new Date(b.date) - new Date(a.date));
 
@@ -115,100 +124,107 @@ const SocialFeed = () => {
   );
 
   return (
-    <Box id="social" sx={{ px: { xs: 2, md: 4 }, py: 4 }}>
-      <Tabs value={tab} onChange={(e, v) => setTab(v)} sx={{ mb: 3 }}>
-        <Tab label="All" value="all" />
-        {/* <Tab label="Tumblr" value="tumblr" /> */}
-      </Tabs>
+    console.log("SocialFeed render", Date.now()),
+    (
+      <Box id="social" sx={{ px: { xs: 2, md: 4 }, py: 4 }}>
+        <Tabs value={tab} onChange={(e, v) => setTab(v)} sx={{ mb: 3 }}>
+          <Tab label="All" value="all" />
+          {/* <Tab label="Tumblr" value="tumblr" /> */}
+        </Tabs>
 
-      {loading ? (
-        <Box sx={{ columnCount: { xs: 1, sm: 2, md: 3 }, gap: 2 }}>
-          {Array.from(new Array(6)).map((_, i) => (
-            <Skeleton
-              key={i}
-              variant="rectangular"
-              height={220}
-              sx={{ mb: 2, borderRadius: 2 }}
-            />
-          ))}
-        </Box>
-      ) : (
-        <Box sx={{ columnCount: { xs: 1, sm: 2, md: 3 }, columnGap: "16px" }}>
-          {filtered.map((post, i) => (
-            <Box key={i} sx={{ breakInside: "avoid", mb: 2 }}>
-              <Card sx={{ borderRadius: 3, overflow: "hidden" }}>
-                <CardActionArea onClick={() => setActive(post)}>
-                  {post.image ? (
-                    <CardMedia
-                      component="img"
-                      image={post.image}
-                      alt={post.title}
-                    />
-                  ) : (
-                    <Box sx={{ p: 3 }}>
-                      <Typography>{post.title}</Typography>
-                    </Box>
-                  )}
+        {loading ? (
+          <Box sx={{ columnCount: { xs: 1, sm: 2, md: 3 }, gap: 2 }}>
+            {Array.from(new Array(6)).map((_, i) => (
+              <Skeleton
+                key={i}
+                variant="rectangular"
+                height={220}
+                sx={{ mb: 2, borderRadius: 2 }}
+              />
+            ))}
+          </Box>
+        ) : (
+          <Box sx={{ columnCount: { xs: 1, sm: 2, md: 3 }, columnGap: "16px" }}>
+            {filtered.map((post, i) => (
+              <Box key={i} sx={{ breakInside: "avoid", mb: 2 }}>
+                <Card sx={{ borderRadius: 3, overflow: "hidden" }}>
+                  <CardActionArea onClick={() => setActive(post)}>
+                    {post.image ? (
+                      <CardMedia
+                        component="img"
+                        image={post.image}
+                        alt={post.title}
+                      />
+                    ) : (
+                      <Box sx={{ p: 3 }}>
+                        <Typography>{post.title}</Typography>
+                      </Box>
+                    )}
 
-                  <Fade in timeout={300}>
-                    <Box
-                      sx={{
-                        position: "absolute",
-                        inset: 0,
-                        bgcolor: "rgba(0,0,0,0.6)",
-                        color: "white",
-                        opacity: 0,
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "flex-end",
-                        p: 2,
-                        transition: "0.3s",
-                        "&:hover": { opacity: 1 },
-                      }}
-                    >
-                      <Chip label={post.source} size="small" sx={{ mb: 1 }} />
-                      <Typography variant="subtitle2" noWrap>
-                        {post.title}
-                      </Typography>
-                      <Typography variant="caption">
-                        {new Date(post.date).toLocaleDateString()}
-                      </Typography>
-                    </Box>
-                  </Fade>
-                </CardActionArea>
-              </Card>
-            </Box>
-          ))}
-        </Box>
-      )}
-
-      <Dialog open={!!active} onClose={() => setActive(null)} maxWidth="md">
-        {active && (
-          <DialogContent sx={{ p: 0 }}>
-            <IconButton
-              onClick={() => setActive(null)}
-              sx={{ position: "absolute", top: 8, right: 8 }}
-            >
-              <CloseIcon />
-            </IconButton>
-
-            {active.image && (
-              <Box component="img" src={active.image} sx={{ width: "100%" }} />
-            )}
-
-            <Box sx={{ p: 2 }}>
-              <Typography variant="h6">{active.title}</Typography>
-              <Typography variant="body2" sx={{ mb: 1 }}>
-                {new Date(active.date).toLocaleDateString()}
-              </Typography>
-              <Typography component="a" href={active.link} target="_blank">
-                View Original Post
-              </Typography>
-            </Box>
-          </DialogContent>
+                    <Fade in timeout={300}>
+                      <Box
+                        sx={{
+                          position: "absolute",
+                          inset: 0,
+                          bgcolor: "rgba(0,0,0,0.6)",
+                          color: "white",
+                          opacity: 0,
+                          display: "flex",
+                          flexDirection: "column",
+                          justifyContent: "flex-end",
+                          p: 2,
+                          transition: "0.3s",
+                          "&:hover": { opacity: 1 },
+                        }}
+                      >
+                        <Chip label={post.source} size="small" sx={{ mb: 1 }} />
+                        <Typography variant="subtitle2" noWrap>
+                          {post.title}
+                        </Typography>
+                        <Typography variant="caption">
+                          {new Date(post.date).toLocaleDateString()}
+                        </Typography>
+                      </Box>
+                    </Fade>
+                  </CardActionArea>
+                </Card>
+              </Box>
+            ))}
+          </Box>
         )}
-      </Dialog>
-    </Box>
+
+        <Dialog open={!!active} onClose={() => setActive(null)} maxWidth="md">
+          {active && (
+            <DialogContent sx={{ p: 0 }}>
+              <IconButton
+                onClick={() => setActive(null)}
+                sx={{ position: "absolute", top: 8, right: 8 }}
+              >
+                <CloseIcon />
+              </IconButton>
+
+              {active.image && (
+                <Box
+                  component="img"
+                  src={active.image}
+                  sx={{ width: "100%" }}
+                />
+              )}
+
+              <Box sx={{ p: 2 }}>
+                <Typography variant="h6">{active.title}</Typography>
+                <Typography variant="body2" sx={{ mb: 1 }}>
+                  {new Date(active.date).toLocaleDateString()}
+                </Typography>
+                <Typography component="a" href={active.link} target="_blank">
+                  View Original Post
+                </Typography>
+              </Box>
+            </DialogContent>
+          )}
+        </Dialog>
+      </Box>
+    )
   );
 };
 
