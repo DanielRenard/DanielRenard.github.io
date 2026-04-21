@@ -1,20 +1,6 @@
-export async function handler() {
-  try {
-    const res = await fetch("https://YOURBLOGNAME.tumblr.com/rss");
-    const text = await res.text();
+[build]
+  command = "npm run build"
+  publish = "dist"
 
-    return {
-      statusCode: 200,
-      headers: {
-        "Content-Type": "text/xml",
-        "Access-Control-Allow-Origin": "*",
-      },
-      body: text,
-    };
-  } catch (err) {
-    return {
-      statusCode: 500,
-      body: "Error fetching Tumblr RSS",
-    };
-  }
-}
+[functions]
+  directory = "netlify/functions"
