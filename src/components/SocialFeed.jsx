@@ -52,7 +52,6 @@ const SocialFeed = () => {
       const data = await res.json();
 
       return data.items.map((item) => {
-        // Tumblr date fix
         const safeDate = item.pubDate
           ? new Date(item.pubDate.replace(" ", "T") + "Z").toISOString()
           : new Date().toISOString();
@@ -73,34 +72,6 @@ const SocialFeed = () => {
       return [];
     }
   };
-
-  // -------- INSTAGRAM (LOCAL JSON) --------
-  const fetchInstagramPosts = async () => {
-    try {
-      const res = await fetch(getPublicPath("/data/instagram.json"));
-
-      if (!res.ok) throw new Error("instagram.json not found");
-
-      const data = await res.json();
-
-      const cleaned = data
-        .filter((post) => post.image && post.date)
-        .map((post) => ({
-          source: "instagram",
-          title: post.title || "Instagram Post",
-          link: post.link || "#",
-          date: new Date(post.date).toISOString(),
-          image: post.image,
-        }));
-
-      console.log("Instagram posts loaded:", cleaned);
-      return cleaned;
-    } catch (err) {
-      console.error("Instagram fetch failed:", err);
-      return [];
-    }
-  };
-
   // -------- COMBINED FETCH --------
   const fetchPosts = async () => {
     setLoading(true);
@@ -120,12 +91,10 @@ const SocialFeed = () => {
     }
 
     const tumblr = await fetchTumblrPosts();
-    const instagram = await fetchInstagramPosts();
 
     console.log("Tumblr count:", tumblr.length);
-    console.log("Instagram count:", instagram.length);
 
-    const combined = [...tumblr, ...instagram]
+    const combined = [...tumblr,]
       .filter((post) => !isNaN(new Date(post.date))) // remove bad dates
       .sort((a, b) => new Date(b.date) - new Date(a.date));
 
@@ -149,8 +118,7 @@ const SocialFeed = () => {
     <Box id="social" sx={{ px: { xs: 2, md: 4 }, py: 4 }}>
       <Tabs value={tab} onChange={(e, v) => setTab(v)} sx={{ mb: 3 }}>
         <Tab label="All" value="all" />
-        <Tab label="Tumblr" value="tumblr" />
-        <Tab label="Instagram" value="instagram" />
+        {/* <Tab label="Tumblr" value="tumblr" /> */}
       </Tabs>
 
       {loading ? (

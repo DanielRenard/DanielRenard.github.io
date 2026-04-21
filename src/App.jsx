@@ -43,10 +43,10 @@ export default function App() {
     { id: "top", label: "Home" },
     { id: "about", label: "About" },
     { id: "social", label: "Social" },
+    { id: "youtube", label: "YouTube" },
     { id: "education", label: "Education" },
     { id: "projects", label: "Projects" },
     { id: "experience", label: "Experience" },
-    { id: "youtube", label: "YouTube" },
     { id: "contact", label: "Contact" },
   ];
 
