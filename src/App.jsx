@@ -23,6 +23,7 @@ import Footer from "./components/Footer";
 import ContactChips from "./components/ContactChips";
 import YoutubeEmbed from "./components/YoutubeEmbed";
 // import CometLayer from "./components/CometLayer";
+import SocialFeed from "./components/SocialFeed";
 
 import { getTheme } from "./theme";
 
@@ -41,10 +42,11 @@ export default function App() {
   const sections = [
     { id: "top", label: "Home" },
     { id: "about", label: "About" },
+    { id: "social", label: "Social" },
+    { id: "youtube", label: "YouTube" },
     { id: "education", label: "Education" },
     { id: "projects", label: "Projects" },
     { id: "experience", label: "Experience" },
-    { id: "youtube", label: "YouTube" },
     { id: "contact", label: "Contact" },
   ];
 
@@ -79,7 +81,7 @@ export default function App() {
     const start =
       clickPos && window.innerWidth >= 900
         ? clickPos
-        : getCenter(avatarRef.current) ?? clickPos ?? { x: 24, y: 24 };
+        : (getCenter(avatarRef.current) ?? clickPos ?? { x: 24, y: 24 });
 
     // setCometEvent({
     //   start,
@@ -248,20 +250,41 @@ export default function App() {
                   With 7 years of experience in Television Broadcasting, a
                   master’s degree in History, and a professional background in
                   education and library services, I bring a unique ability to
-                  engage diverse audiences and communicate complex ideas clearly.
-                  My academic and library experience have strengthened my
-                  research, information management, and community engagement
-                  skills—key to fostering curiosity and lifelong learning. Having
-                  also transitioned into Software Engineering through a UTS
-                  industry-accredited Certificate focused on practical,
-                  project-based learning, I combine technical literacy with strong
-                  communication and analytical abilities. Whether in the
-                  classroom, library, or digital learning environment, I strive to
-                  create inclusive, dynamic spaces that support discovery,
+                  engage diverse audiences and communicate complex ideas
+                  clearly. My academic and library experience have strengthened
+                  my research, information management, and community engagement
+                  skills—key to fostering curiosity and lifelong learning.
+                  Having also transitioned into Software Engineering through a
+                  UTS industry-accredited Certificate focused on practical,
+                  project-based learning, I combine technical literacy with
+                  strong communication and analytical abilities. Whether in the
+                  classroom, library, or digital learning environment, I strive
+                  to create inclusive, dynamic spaces that support discovery,
                   critical thinking, and personal growth.
                 </Typography>
               </CardContent>
             </Card>
+          </Section>
+
+          <Section>
+            <Typography
+              variant="h4"
+              sx={{ fontWeight: 600, mb: 3, letterSpacing: 0.5 }}
+            >
+              Social
+            </Typography>
+            <Card>
+              <SocialFeed />
+            </Card>
+          </Section>
+
+          <Section
+            id="youtube"
+            title="YouTube Playlist"
+            subtitle="This playlist features some of my production experiences. This includes the 2023 Louisiana Gornernor Debate, interviews shot with a robotic camera setup in a small studio, and short documentaries from my time in film school."
+            variant="tintGreen"
+          >
+            <YoutubeEmbed playlistId={contact.youtubePlaylistId} />
           </Section>
 
           <Section
@@ -290,7 +313,9 @@ export default function App() {
                         <Typography sx={{ fontWeight: 800 }}>
                           {e.credential} — {e.school}
                         </Typography>
-                        <Typography color="text.secondary">{e.dates}</Typography>
+                        <Typography color="text.secondary">
+                          {e.dates}
+                        </Typography>
                         <Box component="ul" sx={{ mt: 1, mb: 0, pl: 2 }}>
                           {(e.details ?? []).map((d, i) => (
                             <li key={i}>
@@ -324,7 +349,9 @@ export default function App() {
                         <Typography sx={{ fontWeight: 800 }}>
                           {t.program} — {t.org}
                         </Typography>
-                        <Typography color="text.secondary">{t.dates}</Typography>
+                        <Typography color="text.secondary">
+                          {t.dates}
+                        </Typography>
                         <Box component="ul" sx={{ mt: 1, mb: 0, pl: 2 }}>
                           {(t.details ?? []).map((d, i) => (
                             <li key={i}>
@@ -427,15 +454,6 @@ export default function App() {
                 </Card>
               ))}
             </Stack>
-          </Section>
-
-          <Section
-            id="youtube"
-            title="YouTube Playlist"
-            subtitle="This playlist features some of my production experiences. This includes the 2023 Louisiana Gornernor Debate, interviews shot with a robotic camera setup in a small studio, and short documentaries from my time in film school."
-            variant="tintGreen"
-          >
-            <YoutubeEmbed playlistId={contact.youtubePlaylistId} />
           </Section>
 
           <Section
