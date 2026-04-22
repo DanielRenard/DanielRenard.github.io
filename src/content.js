@@ -151,7 +151,7 @@ export const contact = {
 export const videos = [
     {
     id: "XE71oAyo0t0",
-    title: "Happy 60th Anniversary",
+    title: "Happy 50th Anniversary",
     thumbnail: "https://img.youtube.com/vi/XE71oAyo0t0/mqdefault.jpg"
   },
   {
