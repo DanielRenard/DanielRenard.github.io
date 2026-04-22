@@ -49,7 +49,7 @@ const SocialFeed = () => {
   // -------- TUMBLR --------
   const fetchTumblrPosts = async () => {
     try {
-      const res = await fetch("/.netlify/functions/tumblr");
+      const res = await fetch("https://danieldepot.netlify.app/.netlify/functions/tumblr")
       const text = await res.text();
 
       const parser = new DOMParser();
@@ -100,14 +100,14 @@ const SocialFeed = () => {
 
     console.log("Tumblr count:", tumblr.length);
 
-const combined = [...tumblr]
-  .filter((post) => !isNaN(new Date(post.date)))
-  .sort((a, b) => new Date(b.date) - new Date(a.date))
-  .slice(0, 9);
+    const combined = [...tumblr]
+      .filter((post) => !isNaN(new Date(post.date)))
+      .sort((a, b) => new Date(b.date) - new Date(a.date))
+      .slice(0, 9);
 
     setPosts(combined);
 
-    if (USE_CACHE) {
+    if (USE_CACHE && combined.length > 0) {
       localStorage.setItem(
         CACHE_KEY,
         JSON.stringify({ data: combined, timestamp: Date.now() }),
