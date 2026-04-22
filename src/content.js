@@ -149,15 +149,15 @@ export const contact = {
 };
 
 export const videos = [
+    {
+    id: "XE71oAyo0t0",
+    title: "Happy 60th Anniversary",
+    thumbnail: "https://img.youtube.com/vi/XE71oAyo0t0/mqdefault.jpg"
+  },
   {
     id: "uuQeONlElAK4",
     title: "Maison de Granny",
     thumbnail: "https://img.youtube.com/vi/uQeONlElAK4/mqdefault.jpg"
-  },
-  {
-    id: "XE71oAyo0t0",
-    title: "Happy 60th Anniversary",
-    thumbnail: "https://img.youtube.com/vi/XE71oAyo0t0/mqdefault.jpg"
   },
   {
     id: "OiakNuw469U",
