@@ -49,32 +49,30 @@ const SocialFeed = () => {
   // -------- TUMBLR --------
   const fetchTumblrPosts = async () => {
     try {
-      const res = await fetch("https://danieldepot.netlify.app/.netlify/functions/tumblr")
-      const text = await res.text();
+      const res = await fetch(
+        "https://api.rss2json.com/v1/api.json?rss_url=https://djrenard.tumblr.com/rss",
+      );
+      const data = await res.json();
 
-      const parser = new DOMParser();
-      const xml = parser.parseFromString(text, "text/xml");
-      const items = Array.from(xml.querySelectorAll("item"));
-
-      return items.map((item) => {
-        const title = item.querySelector("title")?.textContent || "Untitled";
-        const link = item.querySelector("link")?.textContent || "";
-        const pubDate = item.querySelector("pubDate")?.textContent;
-        const content = item.querySelector("description")?.textContent || "";
-
-        const match = content.match(/<img[^>]+src="([^">]+)"/);
-        const image = match ? match[1] : "";
+      const posts = data.items.map((item) => {
+        // extract first image from HTML content
+        const doc = new DOMParser().parseFromString(item.content, "text/html");
+        const img = doc.querySelector("img");
+        const image = img ? img.src : null;
 
         return {
-          source: "tumblr",
-          title,
-          link,
-          date: new Date(pubDate).toISOString(),
-          image,
+          platform: "tumblr",
+          title: item.title,
+          link: item.link,
+          date: item.pubDate,
+          thumbnail: image,
+          content: item.content,
         };
       });
+
+      return posts;
     } catch (err) {
-      console.error("Tumblr RSS fetch failed:", err);
+      console.error("Tumblr fetch failed", err);
       return [];
     }
   };
@@ -147,10 +145,10 @@ const SocialFeed = () => {
               <Box key={i} sx={{ breakInside: "avoid", mb: 2 }}>
                 <Card sx={{ borderRadius: 3, overflow: "hidden" }}>
                   <CardActionArea onClick={() => setActive(post)}>
-                    {post.image ? (
+                    {post.thumbnail ? (
                       <CardMedia
                         component="img"
-                        image={post.image}
+                        image={post.thumbnail}
                         alt={post.title}
                       />
                     ) : (
@@ -175,7 +173,11 @@ const SocialFeed = () => {
                           "&:hover": { opacity: 1 },
                         }}
                       >
-                        <Chip label={post.source} size="small" sx={{ mb: 1 }} />
+                        <Chip
+                          label={post.platform}
+                          size="small"
+                          sx={{ mb: 1 }}
+                        />
                         <Typography variant="subtitle2" noWrap>
                           {post.title}
                         </Typography>
@@ -201,10 +203,10 @@ const SocialFeed = () => {
                 <CloseIcon />
               </IconButton>
 
-              {active.image && (
+              {active.thumbnail && (
                 <Box
                   component="img"
-                  src={active.image}
+                  src={active.thumbnail}
                   sx={{ width: "100%" }}
                 />
               )}
