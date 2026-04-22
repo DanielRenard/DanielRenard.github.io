@@ -22,7 +22,7 @@ const RSS_TO_JSON = `https://api.rss2json.com/v1/api.json?rss_url=${TUMBLR_RSS}&
 
 const CACHE_KEY = "socialFeedCache_v3";
 const CACHE_TIME = 1000 * 60 * 10; // 10 min
-const USE_CACHE = false; // turn true after testing
+const USE_CACHE = true;
 
 // makes GitHub Pages + local dev both work
 const getPublicPath = (path) => {
@@ -49,10 +49,7 @@ const SocialFeed = () => {
   // -------- TUMBLR --------
   const fetchTumblrPosts = async () => {
     try {
-      const res = await fetch(
-        "https://api.allorigins.win/raw?url=" +
-          encodeURIComponent("https://djrenard.tumblr.com/rss"),
-      );
+      const res = await fetch("/.netlify/functions/tumblr");
       const text = await res.text();
 
       const parser = new DOMParser();
@@ -103,9 +100,10 @@ const SocialFeed = () => {
 
     console.log("Tumblr count:", tumblr.length);
 
-    const combined = [...tumblr]
-      .filter((post) => !isNaN(new Date(post.date))) // remove bad dates
-      .sort((a, b) => new Date(b.date) - new Date(a.date));
+const combined = [...tumblr]
+  .filter((post) => !isNaN(new Date(post.date)))
+  .sort((a, b) => new Date(b.date) - new Date(a.date))
+  .slice(0, 9);
 
     setPosts(combined);
 

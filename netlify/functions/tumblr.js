@@ -12,6 +12,7 @@ export async function handler(event, context) {
       headers: {
         "Content-Type": "text/xml",
         "Access-Control-Allow-Origin": "*",
+        "Cache-Control": "public, max-age=3600"
       },
       body: text,
     };
