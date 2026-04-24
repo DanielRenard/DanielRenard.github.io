@@ -44,13 +44,12 @@ export default function App() {
     { id: "top", label: "Home" },
     { id: "about", label: "About" },
     { id: "social", label: "Social" },
-    { id: "youtube", label: "YouTube" },
+    { id: "youtube", label: "Videos" },
     { id: "education", label: "Education" },
     { id: "projects", label: "Projects" },
     { id: "experience", label: "Experience" },
     { id: "contact", label: "Contact" },
   ];
-
   const prefersDark = useMediaQuery("(prefers-color-scheme: dark)");
 
   const [themeName, setThemeName] = React.useState(() => {
@@ -189,7 +188,17 @@ export default function App() {
                   >
                     {profile.name}
                   </Typography>
-                  <Typography variant="h6" color="text.secondary">
+                  <Typography
+                    variant="h6"
+                    color="text.secondary"
+                    sx={{
+                      fontSize: {
+                        xs: "1rem",
+                        md: theme.palette.mode === "retro" ? "1rem" : "1.25rem",
+                      },
+                      whiteSpace: "nowrap",
+                    }}
+                  >
                     {profile.title}
                   </Typography>
                   <Typography
@@ -281,7 +290,7 @@ export default function App() {
 
           <Section
             id="youtube"
-            title="YouTube Playlist"
+            title="Video Playlist"
             subtitle="This playlist features some of my production experiences. This includes the 2023 Louisiana Gornernor Debate, interviews shot with a robotic camera setup in a small studio, and short documentaries from my time in film school."
             variant="tintGreen"
           >

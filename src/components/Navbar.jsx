@@ -44,12 +44,12 @@ function smoothScrollTo(targetY, duration = 1200) {
 const themeOptions = [
   { value: "light", label: "Light", icon: <LightModeIcon fontSize="small" /> },
   { value: "dark", label: "Dark", icon: <DarkModeIcon fontSize="small" /> },
-  { value: "retro", label: "Retro", icon: <MemoryIcon fontSize="small" /> },
   {
     value: "lisaFrank",
     label: "Lisa",
     icon: <AutoAwesomeIcon fontSize="small" />,
   },
+  { value: "retro", label: "Retro", icon: <MemoryIcon fontSize="small" /> },
 ];
 
 const NAV_OFFSET = 96;

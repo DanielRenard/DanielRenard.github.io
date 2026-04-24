@@ -50,7 +50,7 @@ const SocialFeed = () => {
   const fetchTumblrPosts = async () => {
     try {
       const res = await fetch(
-        "https://api.rss2json.com/v1/api.json?rss_url=https://djrenard.tumblr.com/rss",
+        "https://api.rss2json.com/v1/api.json?rss_url=https://djrenard.tumblr.com/rss&cache=false",
       );
       const data = await res.json();
 
@@ -65,7 +65,7 @@ const SocialFeed = () => {
           title: item.title,
           link: item.link,
           date: item.pubDate,
-          thumbnail: image,
+          image: image,
           content: item.content,
         };
       });
@@ -145,10 +145,10 @@ const SocialFeed = () => {
               <Box key={i} sx={{ breakInside: "avoid", mb: 2 }}>
                 <Card sx={{ borderRadius: 3, overflow: "hidden" }}>
                   <CardActionArea onClick={() => setActive(post)}>
-                    {post.thumbnail ? (
+                    {post.image ? (
                       <CardMedia
                         component="img"
-                        image={post.thumbnail}
+                        image={post.image}
                         alt={post.title}
                       />
                     ) : (
@@ -203,10 +203,10 @@ const SocialFeed = () => {
                 <CloseIcon />
               </IconButton>
 
-              {active.thumbnail && (
+              {active.image && (
                 <Box
                   component="img"
-                  src={active.thumbnail}
+                  src={active.image}
                   sx={{ width: "100%" }}
                 />
               )}
