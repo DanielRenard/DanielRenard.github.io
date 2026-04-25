@@ -155,7 +155,7 @@ export const videos = [
     thumbnail: "https://img.youtube.com/vi/XE71oAyo0t0/mqdefault.jpg"
   },
   {
-    id: "uuQeONlElAK4",
+    id: "uQeONlElAK4", 
     title: "Maison de Granny",
     thumbnail: "https://img.youtube.com/vi/uQeONlElAK4/mqdefault.jpg"
   },
