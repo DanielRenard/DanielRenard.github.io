@@ -166,7 +166,9 @@ export default function Navbar({
           sx={{
             py: 1,
             alignItems: "center",
-            overflow: "hidden",
+            flexWrap: "wrap",
+            height: "auto",
+            minHeight: "unset",
           }}
         >
           <Container
@@ -356,7 +358,9 @@ export default function Navbar({
             </Stack>
 
             <IconButton
-              sx={{ display: { xs: "inline-flex", sm: "none" } }}
+              sx={{
+                display: { xs: "inline-flex", sm: "none" },
+              }}
               color="inherit"
               onClick={() => setOpen(true)}
               aria-label="Open menu"
@@ -367,7 +371,16 @@ export default function Navbar({
         </Toolbar>
       </AppBar>
 
-      <Drawer anchor="right" open={open} onClose={() => setOpen(false)}>
+      <Drawer
+        anchor="right"
+        open={open}
+        onClose={() => setOpen(false)}
+        PaperProps={{
+          sx: {
+            pt: { xs: "110px", sm: "64px" },
+          },
+        }}
+      >
         <Box
           sx={{
             width: 300,
