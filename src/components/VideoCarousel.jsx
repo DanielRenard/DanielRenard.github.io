@@ -13,6 +13,64 @@ export default function VideoCarousel({ videos, current, onSelect }) {
     });
   };
 
+  const getCarouselScrollbar = (theme) => {
+    const neon = theme.palette.primary.main === "#00FF66";
+    const dark = theme.palette.mode === "dark";
+
+    return {
+      /* Fade scrollbar until interaction */
+      opacity: 0.6,
+      transition: "opacity .3s",
+      "&:hover": {
+        opacity: 1,
+      },
+
+      /* Firefox */
+      scrollbarWidth: "thin",
+      scrollbarColor: `${theme.palette.primary.main} transparent`,
+
+      /* WebKit */
+      "&::-webkit-scrollbar": {
+        height: 10,
+      },
+
+      "&::-webkit-scrollbar-track": {
+        background: "transparent",
+        marginInline: 40, // leaves space near arrows 👌
+      },
+
+      "&::-webkit-scrollbar-thumb": {
+        borderRadius: 20,
+        background: dark ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.25)",
+        border: "2px solid transparent",
+        backgroundClip: "padding-box",
+        transition: "all .25s ease",
+      },
+
+      /* Hover — becomes primary color */
+      "&:hover::-webkit-scrollbar-thumb": {
+        background: theme.palette.primary.main,
+      },
+
+      /* Active dragging */
+      "&::-webkit-scrollbar-thumb:active": {
+        background: theme.palette.primary.dark,
+      },
+
+      /* Neon theme glow */
+      ...(neon && {
+        "&:hover::-webkit-scrollbar-thumb": {
+          background: "#00FF66",
+          boxShadow: "0 0 10px rgba(0,255,102,0.7)",
+        },
+        "&::-webkit-scrollbar-thumb:active": {
+          background: "#00e65c",
+          boxShadow: "0 0 14px rgba(0,255,102,0.9)",
+        },
+      }),
+    };
+  };
+
   return (
     <Box sx={{ position: "relative", mt: 2 }}>
       {/* LEFT ARROW */}
@@ -55,13 +113,23 @@ export default function VideoCarousel({ videos, current, onSelect }) {
       {/* CAROUSEL STRIP */}
       <Box
         ref={scrollRef}
-        sx={{
+        sx={(theme) => ({
           display: "flex",
           gap: 2,
           overflowX: "auto",
           py: 2,
+          px: 1,
           scrollBehavior: "smooth",
-        }}
+
+          /* snap makes scroll feel premium */
+          scrollSnapType: "x mandatory",
+
+          /* fade edges (super modern) */
+          maskImage:
+            "linear-gradient(to right, transparent, black 40px, black calc(100% - 40px), transparent)",
+
+          ...getCarouselScrollbar(theme),
+        })}
       >
         {videos.map((video) => {
           const active = video.id === current;
@@ -73,7 +141,10 @@ export default function VideoCarousel({ videos, current, onSelect }) {
               transition={{ duration: 2, repeat: Infinity }}
               whileHover={{ scale: 1.08 }}
               whileTap={{ scale: 0.95 }}
-              style={{ minWidth: 220 }}
+              style={{
+                minWidth: 220,
+                scrollSnapAlign: "start",
+              }}
             >
               <Box
                 onClick={() => onSelect(video.id)}

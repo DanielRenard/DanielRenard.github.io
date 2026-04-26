@@ -180,8 +180,22 @@ export default function App() {
                 </Stack>
               </Grid>
 
-              <Grid size={{ xs: 12, md: 8 }}>
-                <Stack spacing={1.5} textAlign={{ xs: "center", md: "left" }}>
+              <Grid
+                size={{ xs: 12, md: 8 }}
+                sx={{
+                  display: "flex",
+                  justifyContent: { xs: "center", md: "flex-start" },
+                }}
+              >
+                <Stack
+                  spacing={1.5}
+                  textAlign={{ xs: "center", md: "left" }}
+                  sx={{
+                    maxWidth: 720,
+                    width: "100%",
+                    alignItems: { xs: "center", md: "flex-start" },
+                  }}
+                >
                   <Typography
                     variant="h2"
                     sx={{ fontSize: { xs: 40, md: 56 } }}
@@ -260,9 +274,7 @@ export default function App() {
                     borderRadius: isRetro ? 0 : 999,
                   }}
                 />
-                <Typography>
-                  {content.biography.bio}
-                </Typography>
+                <Typography>{content.biography.bio}</Typography>
               </CardContent>
             </Card>
           </Section>

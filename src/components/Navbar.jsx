@@ -174,19 +174,17 @@ export default function Navbar({
             sx={{
               display: "flex",
               alignItems: "center",
-              justifyContent: "space-between",
               flexWrap: "wrap",
               rowGap: 1,
-              gap: 1.5,
-              gap: 2,
+              columnGap: 1.5,
             }}
           >
             <Typography
               variant="h6"
               sx={{
                 fontWeight: 900,
-                flexGrow: 1,
                 flexShrink: 0,
+                mr: "auto",
                 letterSpacing: isRetro ? 1.4 : 0,
                 textTransform: isRetro ? "uppercase" : "none",
               }}
@@ -199,9 +197,9 @@ export default function Navbar({
                 display: { xs: "none", sm: "flex" },
                 gap: 0.5,
                 alignItems: "center",
-                flexGrow: 1,
                 justifyContent: "center",
-                minWidth: 0,
+                flexGrow: 1,
+                minWidth: "fit-content",
               }}
             >
               {items.map((it) => {
@@ -265,10 +263,25 @@ export default function Navbar({
             <Stack
               direction="row"
               spacing={0.5}
+              flexWrap="wrap"
+              justifyContent="center"
               sx={{
                 display: { xs: "none", sm: "flex" },
-                ml: 1,
                 flexShrink: 0,
+                /* desktop position */
+                ml: "auto",
+
+                /* center when pills wrap onto new row */
+                "@media (max-width:1226px)": {
+                  order: 3,
+                  flexBasis: "100%",
+                  ml: 0,
+                  mt: 1,
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                },
+
                 p: 0.5,
                 border: "1px solid",
                 borderColor: "divider",
@@ -279,6 +292,14 @@ export default function Navbar({
                     : "rgba(255,255,255,0.06)",
                 backdropFilter: "blur(8px)",
                 boxShadow: "0 0 12px rgba(0,0,0,0.15)",
+                "@media (max-width:600px)": {
+                  transform: "scale(0.9)",
+                  gap: 0.25,
+                  p: 0.25,
+                },
+                "@media (max-width:299px)": {
+                  width: 220,
+                },
               }}
             >
               {themeOptions.map((option) => {
@@ -291,20 +312,42 @@ export default function Navbar({
                     color="inherit"
                     startIcon={option.icon}
                     onClick={() => onThemeChange(option.value)}
-                    sx={{
+                    sx={(theme) => ({
                       minWidth: "auto",
-                      px: 1.2,
+
+                      /* NORMAL SIZE */
+                      px: isRetro ? 1.4 : 1.2,
+                      py: isRetro ? 0.6 : 0.4,
+                      fontSize: isRetro ? "0.85rem" : "0.8rem",
+
                       borderRadius: isRetro ? 0 : 999,
                       border: selected ? "1px solid" : "1px solid transparent",
                       borderColor: selected ? "primary.main" : "transparent",
+
                       backgroundColor: selected
                         ? isRetro
                           ? "rgba(0,255,102,0.12)"
                           : "action.selected"
                         : "transparent",
+
                       textTransform: isRetro ? "uppercase" : "none",
                       letterSpacing: isRetro ? 0.8 : 0,
-                    }}
+
+                      "& .MuiSvgIcon-root": {
+                        fontSize: isRetro ? "1rem" : "0.95rem",
+                      },
+                      [theme.breakpoints.down("sm")]: {
+                        px: 0.7,
+                        py: 0.2,
+                        fontSize: "0.65rem",
+                        letterSpacing: isRetro ? 0.4 : 0,
+
+                        "& .MuiSvgIcon-root": {
+                          fontSize: "0.85rem",
+                          marginRight: "4px",
+                        },
+                      },
+                    })}
                   >
                     {option.label}
                   </Button>
@@ -334,44 +377,6 @@ export default function Navbar({
             p: 1,
           }}
         >
-          <Typography sx={{ px: 1, py: 1, fontWeight: 800 }}>Theme</Typography>
-
-          <Stack direction="column" spacing={1} sx={{ px: 1, pb: 2 }}>
-            {themeOptions.map((option) => {
-              const selected = option.value === themeName;
-
-              return (
-                <Button
-                  key={option.value}
-                  fullWidth
-                  color="inherit"
-                  startIcon={option.icon}
-                  onClick={() => onThemeChange(option.value)}
-                  sx={{
-                    justifyContent: "flex-start",
-                    borderRadius: isRetro ? 0 : 2,
-                    border: "1px solid",
-                    borderColor: selected ? "primary.main" : "divider",
-                    backgroundColor: selected
-                      ? isRetro
-                        ? "rgba(0,255,102,0.12)"
-                        : isLisa
-                          ? "rgba(255,79,216,0.18)"
-                          : "action.selected"
-                      : "transparent",
-                    textTransform: isRetro ? "uppercase" : "none",
-                    boxShadow:
-                      selected && isLisa
-                        ? "0 0 12px rgba(255,79,216,0.6)"
-                        : "none",
-                  }}
-                >
-                  {option.label}
-                </Button>
-              );
-            })}
-          </Stack>
-
           <List>
             {items.map((it) => (
               <ListItemButton
