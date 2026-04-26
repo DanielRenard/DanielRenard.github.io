@@ -192,11 +192,15 @@ export default function App() {
                     variant="h6"
                     color="text.secondary"
                     sx={{
+                      whiteSpace: { xs: "normal", md: "normal" },
+
+                      lineHeight: 1.3,
+                      minHeight: "2.6em",
+
                       fontSize: {
-                        xs: "1rem",
-                        md: theme.palette.mode === "retro" ? "1rem" : "1.25rem",
+                        xs: "clamp(0.9rem, 3vw, 1rem)",
+                        md: themeName === "retro" ? "1rem" : "1.25rem",
                       },
-                      whiteSpace: "nowrap",
                     }}
                   >
                     {profile.title}
@@ -257,20 +261,7 @@ export default function App() {
                   }}
                 />
                 <Typography>
-                  With 7 years of experience in Television Broadcasting, a
-                  master’s degree in History, and a professional background in
-                  education and library services, I bring a unique ability to
-                  engage diverse audiences and communicate complex ideas
-                  clearly. My academic and library experience have strengthened
-                  my research, information management, and community engagement
-                  skills—key to fostering curiosity and lifelong learning.
-                  Having also transitioned into Software Engineering through a
-                  UTS industry-accredited Certificate focused on practical,
-                  project-based learning, I combine technical literacy with
-                  strong communication and analytical abilities. Whether in the
-                  classroom, library, or digital learning environment, I strive
-                  to create inclusive, dynamic spaces that support discovery,
-                  critical thinking, and personal growth.
+                  {content.biography.bio}
                 </Typography>
               </CardContent>
             </Card>

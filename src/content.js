@@ -7,6 +7,10 @@ export const profile = {
   location: "Southern California",
 };
 
+export const biography = {
+  bio: "With 7 years of experience in Television Broadcasting, master’s degree in History, and a professional background in education and library services, I bring a unique ability to engage diverse audiences and communicate complex ideas clearly. My academic and library experience have strengthened my research, information management, and community engagement skills—key to fostering curiosity and lifelong learning. Having also transitioned into Software Engineering through a UTS industry-accredited Certificate focused on practical, project-based learning, I combine technical literacy with strong communication and analytical abilities. Whether in the classroom, library, or digital learning environment, I strive to create inclusive, dynamic spaces that support discovery, critical thinking, and personal growth.",
+};
+
 export const education = [
   {
     school: "California State Polytechnic University-Pomona / History",
@@ -149,44 +153,44 @@ export const contact = {
 };
 
 export const videos = [
-    {
+  {
     id: "XE71oAyo0t0",
     title: "Happy 50th Anniversary",
-    thumbnail: "https://img.youtube.com/vi/XE71oAyo0t0/mqdefault.jpg"
+    thumbnail: "https://img.youtube.com/vi/XE71oAyo0t0/mqdefault.jpg",
   },
   {
-    id: "uQeONlElAK4", 
+    id: "uQeONlElAK4",
     title: "Maison de Granny",
-    thumbnail: "https://img.youtube.com/vi/uQeONlElAK4/mqdefault.jpg"
+    thumbnail: "https://img.youtube.com/vi/uQeONlElAK4/mqdefault.jpg",
   },
   {
     id: "OiakNuw469U",
     title: "2023 Louisiana Governor Primary Debate",
-    thumbnail: "https://img.youtube.com/vi/OiakNuw469U/mqdefault.jpg"
+    thumbnail: "https://img.youtube.com/vi/OiakNuw469U/mqdefault.jpg",
   },
-    {
+  {
     id: "sRD4iL56dOA",
     title: "LARC's Mardi Gras Bead Store extending business hours",
-    thumbnail: "https://img.youtube.com/vi/sRD4iL56dOA/mqdefault.jpg"
+    thumbnail: "https://img.youtube.com/vi/sRD4iL56dOA/mqdefault.jpg",
   },
-    {
+  {
     id: "kSRn7D4_mJg",
     title: "Hilliard Art Museum",
-    thumbnail: "https://img.youtube.com/vi/kSRn7D4_mJg/mqdefault.jpg"
+    thumbnail: "https://img.youtube.com/vi/kSRn7D4_mJg/mqdefault.jpg",
   },
-    {
+  {
     id: "I8SISeiVBog",
     title: "33rd Annual World Championship Gumbo Cookoff returns",
-    thumbnail: "https://img.youtube.com/vi/I8SISeiVBog/mqdefault.jpg"
+    thumbnail: "https://img.youtube.com/vi/I8SISeiVBog/mqdefault.jpg",
   },
-    {
+  {
     id: "k80H2atjxps",
     title: "Creole Heritage Month Exhibit",
-    thumbnail: "https://img.youtube.com/vi/k80H2atjxps/mqdefault.jpg"
+    thumbnail: "https://img.youtube.com/vi/k80H2atjxps/mqdefault.jpg",
   },
-    {
+  {
     id: "Gik-ne2kQM8",
     title: "Raising Awareness for Friedreichs Ataxia",
-    thumbnail: "https://img.youtube.com/vi/Gik-ne2kQM8/mqdefault.jpg"
-  }
+    thumbnail: "https://img.youtube.com/vi/Gik-ne2kQM8/mqdefault.jpg",
+  },
 ];

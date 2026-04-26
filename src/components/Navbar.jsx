@@ -162,16 +162,31 @@ export default function Navbar({
           color: "primary.contrastText",
         }}
       >
-        <Toolbar>
+        <Toolbar
+          sx={{
+            py: 1,
+            alignItems: "center",
+            overflow: "hidden",
+          }}
+        >
           <Container
             maxWidth="lg"
-            sx={{ display: "flex", alignItems: "center", gap: 1.5 }}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              flexWrap: "wrap",
+              rowGap: 1,
+              gap: 1.5,
+              gap: 2,
+            }}
           >
             <Typography
               variant="h6"
               sx={{
                 fontWeight: 900,
                 flexGrow: 1,
+                flexShrink: 0,
                 letterSpacing: isRetro ? 1.4 : 0,
                 textTransform: isRetro ? "uppercase" : "none",
               }}
@@ -181,9 +196,12 @@ export default function Navbar({
 
             <Box
               sx={{
-                display: { xs: "none", md: "flex" },
+                display: { xs: "none", sm: "flex" },
                 gap: 0.5,
                 alignItems: "center",
+                flexGrow: 1,
+                justifyContent: "center",
+                minWidth: 0,
               }}
             >
               {items.map((it) => {
@@ -248,8 +266,9 @@ export default function Navbar({
               direction="row"
               spacing={0.5}
               sx={{
-                display: { xs: "none", md: "flex" },
+                display: { xs: "none", sm: "flex" },
                 ml: 1,
+                flexShrink: 0,
                 p: 0.5,
                 border: "1px solid",
                 borderColor: "divider",
@@ -294,7 +313,7 @@ export default function Navbar({
             </Stack>
 
             <IconButton
-              sx={{ display: { xs: "inline-flex", md: "none" } }}
+              sx={{ display: { xs: "inline-flex", sm: "none" } }}
               color="inherit"
               onClick={() => setOpen(true)}
               aria-label="Open menu"
