@@ -284,7 +284,7 @@ export default function App() {
               variant="h4"
               sx={{ fontWeight: 600, mb: 3, letterSpacing: 0.5 }}
             >
-              Social Media Feed
+              Media Feed
             </Typography>
             <Card>
               <SocialFeed />

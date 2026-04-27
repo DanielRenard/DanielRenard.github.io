@@ -13,8 +13,10 @@ import {
   Chip,
   Tabs,
   Tab,
+  Button,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import RefreshIcon from "@mui/icons-material/Refresh";
 
 const TUMBLR_RSS = "https://djrenard.tumblr.com/rss";
 const cacheBust = Math.floor(Date.now() / (1000 * 60 * 60));
@@ -35,6 +37,8 @@ const SocialFeed = () => {
   const [tab, setTab] = useState("all");
   const [loading, setLoading] = useState(true);
   const [active, setActive] = useState(null);
+  const [refreshing, setRefreshing] = useState(false);
+  const [retryAttempted, setRetryAttempted] = useState(false);
 
   useEffect(() => {
     fetchPosts();
@@ -50,7 +54,7 @@ const SocialFeed = () => {
   const fetchTumblrPosts = async () => {
     try {
       const res = await fetch(
-        "https://api.rss2json.com/v1/api.json?rss_url=https://djrenard.tumblr.com/rss&cache=false",
+        `https://api.rss2json.com/v1/api.json?rss_url=${TUMBLR_RSS}&cache=false&t=${Date.now()}`,
       );
       const data = await res.json();
 
@@ -77,11 +81,11 @@ const SocialFeed = () => {
     }
   };
   // -------- COMBINED FETCH --------
-  const fetchPosts = async () => {
+  const fetchPosts = async (forceRefresh = false) => {
     setLoading(true);
 
-    // Cache check
-    if (USE_CACHE) {
+    // Cache check (skip if force refresh)
+    if (USE_CACHE && !forceRefresh) {
       const cached = localStorage.getItem(CACHE_KEY);
       if (cached) {
         const { data, timestamp } = JSON.parse(cached);
@@ -94,7 +98,16 @@ const SocialFeed = () => {
       }
     }
 
-    const tumblr = await fetchTumblrPosts();
+    let tumblr = await fetchTumblrPosts();
+
+    // AUTO-RETRY if feed empty (self-healing)
+    if (tumblr.length === 0 && !retryAttempted && !forceRefresh) {
+      console.log("Feed empty → auto retry in 2s");
+      setRetryAttempted(true);
+
+      await new Promise((r) => setTimeout(r, 2000));
+      return fetchPosts(true); // force refresh retry
+    }
 
     console.log("Tumblr count:", tumblr.length);
 
@@ -104,6 +117,7 @@ const SocialFeed = () => {
       .slice(0, 9);
 
     setPosts(combined);
+    if (combined.length > 0) setRetryAttempted(false);
 
     if (USE_CACHE && combined.length > 0) {
       localStorage.setItem(
@@ -119,14 +133,52 @@ const SocialFeed = () => {
     tab === "all" ? true : p.source === tab,
   );
 
+  const handleRefresh = async () => {
+    console.log("Manual refresh triggered");
+
+    setRefreshing(true);
+    setRetryAttempted(false);
+    localStorage.removeItem(CACHE_KEY); // clear stale cache
+
+    await fetchPosts(true); // force refresh
+
+    setRefreshing(false);
+  };
+
   return (
     console.log("SocialFeed render", Date.now()),
     (
       <Box id="social" sx={{ px: { xs: 2, md: 4 }, py: 4 }}>
+        <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+          <Typography variant="h4">Fanfare 🎉</Typography>
+
+          <Button
+            variant="outlined"
+            startIcon={<RefreshIcon />}
+            onClick={handleRefresh}
+            disabled={loading || refreshing}
+          >
+            {refreshing ? "Refreshing..." : "Refresh"}
+          </Button>
+        </Box>
         <Tabs value={tab} onChange={(e, v) => setTab(v)} sx={{ mb: 3 }}>
           <Tab label="All" value="all" />
           {/* <Tab label="Tumblr" value="tumblr" /> */}
         </Tabs>
+        {/* Feed failed fallback */}
+        {posts.length === 0 && !loading && (
+          <Box sx={{ textAlign: "center", mb: 3 }}>
+            <Typography sx={{ mb: 1 }}>Social feed didn’t load.</Typography>
+
+            <Button
+              variant="contained"
+              startIcon={<RefreshIcon />}
+              onClick={handleRefresh}
+            >
+              Retry Feed
+            </Button>
+          </Box>
+        )}
 
         {loading ? (
           <Box sx={{ columnCount: { xs: 1, sm: 2, md: 3 }, gap: 2 }}>
