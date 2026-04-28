@@ -164,7 +164,7 @@ export default function App() {
                 >
                   <Avatar
                     alt="my photo"
-                    src="/images/dan.jpeg"
+                    src="/images/DanielAtSunset.jpg"
                     ref={avatarRef}
                     sx={{
                       width: 180,

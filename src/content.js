@@ -193,4 +193,14 @@ export const videos = [
     title: "Raising Awareness for Friedreichs Ataxia",
     thumbnail: "https://img.youtube.com/vi/Gik-ne2kQM8/mqdefault.jpg",
   },
+  {
+    id: "NeIga9gaVu4",
+    title: "Meet Your Neighbor: Wealth Wednesday",
+    thumbnail: "https://img.youtube.com/vi/NeIga9gaVu4/mqdefault.jpg",
+  },
+  {
+    id: "2u_AhNUPcMo",
+    title: "Meet Your Neighbor: Foundation for Wellness",
+    thumbnail: "https://img.youtube.com/vi/2u_AhNUPcMo/mqdefault.jpg",
+  },
 ];
