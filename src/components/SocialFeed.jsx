@@ -30,16 +30,13 @@ const CACHE_TIME = 1000 * 60 * 10;
 const popularTags = [
   "djrenardpulllist",
   "djrenardfavorites",
-  "djrenardteam",
-  "Conner Kent",
+  "Kon-El",
   "Transformers",
   "ASoIaF",
   "DBZ",
   "Absolute Wonder Woman",
-  "Tim Drake",
-  "Green Lantern",
-  "Wally West",
   "Star Wars",
+  "Wally West",
   "Star Trek",
 ];
 
@@ -212,7 +209,7 @@ const SocialFeed = () => {
         }}
       >
         <TextField
-          label="Search Tumblr Posts"
+          label="Search Posts"
           value={search}
           onChange={(e) => {
             setSearch(e.target.value);
