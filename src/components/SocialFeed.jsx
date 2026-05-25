@@ -40,7 +40,7 @@ const popularTags = [
   "Star Trek",
 ];
 
-const SocialFeed = () => {
+export default function SocialFeed() {
   const [posts, setPosts] = useState([]);
   const [tab, setTab] = useState("all");
   const [loading, setLoading] = useState(true);
@@ -56,8 +56,10 @@ const SocialFeed = () => {
 
   const parsePosts = (items = []) => {
     return items.map((item) => {
+      const htmlContent = item.content || item.description || "";
+
       const doc = new DOMParser().parseFromString(
-        item.content,
+        htmlContent,
         "text/html"
       );
 
@@ -65,26 +67,42 @@ const SocialFeed = () => {
 
       return {
         platform: "tumblr",
-        title: item.title,
+        title: item.title || "Tumblr Post",
         link: item.link,
         date: item.pubDate,
         image: img ? img.src : "",
-        content: item.content,
+        content: htmlContent,
         tags: item.categories || [],
       };
     });
   };
 
+  const buildRss2JsonUrl = (rssUrl) => {
+    const params = new URLSearchParams({
+      rss_url: rssUrl,
+    });
+
+    return `https://api.rss2json.com/v1/api.json?${params.toString()}`;
+  };
+
   const fetchJSON = async (url) => {
     try {
       const res = await fetch(url);
-      const data = await res.json();
+      const text = await res.text();
+
+      // console.log("RSS request:", url);
+      // console.log("RSS status:", res.status);
+      // console.log("RSS response:", text);
+
+      if (!res.ok) return [];
+
+      const data = JSON.parse(text);
 
       if (!data.items) return [];
 
       return parsePosts(data.items);
     } catch (err) {
-      console.error(err);
+      // console.error("RSS fetch failed:", err);
       return [];
     }
   };
@@ -106,10 +124,7 @@ const SocialFeed = () => {
       }
     }
 
-    const url =
-      `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(
-        TUMBLR_RSS
-      )}&cache=false&t=${Date.now()}`;
+    const url = buildRss2JsonUrl(TUMBLR_RSS);
 
     const tumblr = await fetchJSON(url);
 
@@ -131,31 +146,37 @@ const SocialFeed = () => {
   };
 
   const fetchTaggedPosts = async (term) => {
-    if (!term) {
+    const cleanTerm = term.trim();
+
+    if (!cleanTerm) {
       fetchPosts(true);
       return;
     }
 
     setLoading(true);
 
-    const taggedRSS = `https://djrenard.tumblr.com/tagged/${encodeURIComponent(
-      term
-    )}/rss`;
+    const encodedTag = encodeURIComponent(cleanTerm);
 
-    const url =
-      `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(
-        taggedRSS
-      )}&cache=false&t=${Date.now()}`;
+    const taggedRSS = `https://djrenard.tumblr.com/tagged/${encodedTag}/rss`;
+
+    const url = buildRss2JsonUrl(taggedRSS);
 
     const results = await fetchJSON(url);
 
-    setPosts(results);
+    const sortedResults = results
+      .filter((post) => !isNaN(new Date(post.date)))
+      .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    setPosts(sortedResults);
     setLoading(false);
   };
 
   const handleRefresh = async () => {
     setRefreshing(true);
     localStorage.removeItem(CACHE_KEY);
+    setSelectedTag("");
+    setSearch("");
+    setTab("all");
     await fetchPosts(true);
     setRefreshing(false);
   };
@@ -163,21 +184,29 @@ const SocialFeed = () => {
   const handleSearchSubmit = async () => {
     const term = search.trim();
 
+    setTab("search");
     setSelectedTag("");
     await fetchTaggedPosts(term);
   };
 
   const handleTagClick = async (tag) => {
+    setTab("tag");
     setSelectedTag(tag);
     setSearch("");
     await fetchTaggedPosts(tag);
+  };
+
+  const handleAllClick = async () => {
+    setTab("all");
+    setSelectedTag("");
+    setSearch("");
+    await fetchPosts(true);
   };
 
   const filtered = posts.slice(0, 9);
 
   return (
     <Box id="social" sx={{ px: { xs: 2, md: 4 }, py: 4 }}>
-      {/* HEADER */}
       <Box
         sx={{
           display: "flex",
@@ -199,7 +228,6 @@ const SocialFeed = () => {
         </Button>
       </Box>
 
-      {/* SEARCH */}
       <Box
         sx={{
           display: "flex",
@@ -229,12 +257,12 @@ const SocialFeed = () => {
           variant="contained"
           startIcon={<SearchIcon />}
           onClick={handleSearchSubmit}
+          disabled={loading}
         >
           Search
         </Button>
       </Box>
 
-      {/* TAGS */}
       <Box
         sx={{
           display: "flex",
@@ -245,15 +273,7 @@ const SocialFeed = () => {
         }}
       >
         <Tabs value={tab} onChange={(e, v) => setTab(v)}>
-          <Tab
-            label="All"
-            value="all"
-            onClick={() => {
-              setSelectedTag("");
-              setSearch("");
-              fetchPosts(true);
-            }}
-          />
+          <Tab label="All" value="all" onClick={handleAllClick} />
         </Tabs>
 
         <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
@@ -263,9 +283,7 @@ const SocialFeed = () => {
               label={tag}
               clickable
               color={selectedTag === tag ? "primary" : "default"}
-              variant={
-                selectedTag === tag ? "filled" : "outlined"
-              }
+              variant={selectedTag === tag ? "filled" : "outlined"}
               onClick={() => handleTagClick(tag)}
               sx={{
                 fontWeight: 600,
@@ -276,23 +294,16 @@ const SocialFeed = () => {
         </Stack>
       </Box>
 
-      {/* NO RESULTS */}
       {!loading && filtered.length === 0 && (
         <Box sx={{ py: 6, textAlign: "center" }}>
-          <Typography variant="h6">
-            No results found.
-          </Typography>
+          <Typography variant="h6">No results found.</Typography>
 
-          <Typography
-            variant="body2"
-            sx={{ opacity: 0.7 }}
-          >
+          <Typography variant="body2" sx={{ opacity: 0.7 }}>
             Try another tag or keyword.
           </Typography>
         </Box>
       )}
 
-      {/* LOADING */}
       {loading ? (
         <Box
           sx={{
@@ -321,7 +332,7 @@ const SocialFeed = () => {
         >
           {filtered.map((post, i) => (
             <Box
-              key={i}
+              key={`${post.link}-${i}`}
               sx={{
                 breakInside: "avoid",
                 mb: 2,
@@ -333,9 +344,7 @@ const SocialFeed = () => {
                   overflow: "hidden",
                 }}
               >
-                <CardActionArea
-                  onClick={() => setActive(post)}
-                >
+                <CardActionArea onClick={() => setActive(post)}>
                   {post.image ? (
                     <CardMedia
                       component="img"
@@ -374,17 +383,12 @@ const SocialFeed = () => {
                         sx={{ mb: 1 }}
                       />
 
-                      <Typography
-                        variant="subtitle2"
-                        noWrap
-                      >
+                      <Typography variant="subtitle2" noWrap>
                         {post.title}
                       </Typography>
 
                       <Typography variant="caption">
-                        {new Date(
-                          post.date
-                        ).toLocaleDateString()}
+                        {new Date(post.date).toLocaleDateString()}
                       </Typography>
                     </Box>
                   </Fade>
@@ -395,12 +399,7 @@ const SocialFeed = () => {
         </Box>
       )}
 
-      {/* MODAL */}
-      <Dialog
-        open={!!active}
-        onClose={() => setActive(null)}
-        maxWidth="md"
-      >
+      <Dialog open={!!active} onClose={() => setActive(null)} maxWidth="md">
         {active && (
           <DialogContent sx={{ p: 0 }}>
             <IconButton
@@ -409,6 +408,8 @@ const SocialFeed = () => {
                 position: "absolute",
                 top: 8,
                 right: 8,
+                zIndex: 2,
+                bgcolor: "background.paper",
               }}
             >
               <CloseIcon />
@@ -418,28 +419,23 @@ const SocialFeed = () => {
               <Box
                 component="img"
                 src={active.image}
-                sx={{ width: "100%" }}
+                alt={active.title}
+                sx={{ width: "100%", display: "block" }}
               />
             )}
 
             <Box sx={{ p: 2 }}>
-              <Typography variant="h6">
-                {active.title}
-              </Typography>
+              <Typography variant="h6">{active.title}</Typography>
 
-              <Typography
-                variant="body2"
-                sx={{ mb: 1 }}
-              >
-                {new Date(
-                  active.date
-                ).toLocaleDateString()}
+              <Typography variant="body2" sx={{ mb: 1 }}>
+                {new Date(active.date).toLocaleDateString()}
               </Typography>
 
               <Typography
                 component="a"
                 href={active.link}
                 target="_blank"
+                rel="noreferrer"
               >
                 View Original Post
               </Typography>
@@ -450,5 +446,3 @@ const SocialFeed = () => {
     </Box>
   );
 };
-
-export default SocialFeed;
