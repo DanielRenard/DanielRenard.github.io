@@ -7,6 +7,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import "../LightBetGame.css";
 
 const SWORDS = [
@@ -50,12 +51,13 @@ const SWORDS = [
 const MIN_GAME_TIME = 5000;
 
 function LightBetGame({ startingLuck = 10 }) {
+  const theme = useTheme();
   const [luck, setLuck] = useState(startingLuck);
   const [selectedColor, setSelectedColor] = useState("");
   const [bet, setBet] = useState("");
   const [activeLight, setActiveLight] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [message, setMessage] = useState("Select a color and place your bet.");
+  const [message, setMessage] = useState("Select a color and press your luck.");
 
   const timerRef = useRef(null);
   const animationRef = useRef(null);
@@ -76,7 +78,7 @@ function LightBetGame({ startingLuck = 10 }) {
       return;
     }
 
-    // Validate bet
+    // Validate luck
     if (!Number.isInteger(wager) || wager <= 0) {
       setMessage("Cast a whole-number sacrifice greater than zero.");
       return;
@@ -136,28 +138,26 @@ function LightBetGame({ startingLuck = 10 }) {
       }
     };
 
-const finishGame = (winningIndex) => {
-  setActiveLight(winningIndex);
-  setIsPlaying(false);
+    const finishGame = (winningIndex) => {
+      setActiveLight(winningIndex);
+      setIsPlaying(false);
 
-  const winningColor = SWORDS[winningIndex].name;
+      const winningColor = SWORDS[winningIndex].name;
 
-  if (winningColor === selectedColor) {
-    // Player picked the winning sword
-    const winnings = wager * 2;
+      if (winningColor === selectedColor) {
+        // Player picked the winning sword
+        const winnings = wager * 2;
 
-    setLuck((currentLuck) => currentLuck + winnings);
+        setLuck((currentLuck) => currentLuck + winnings);
 
-    setMessage(
-      `FATE FAVORS YOU!!! ${winningColor} was selected. You won ${winnings} luck bucks!`
-    );
-  } else {
-    // Player picked the wrong sword
-    setMessage(
-      `${winningColor} was chosen. Your Luck has been spent.`
-    );
-  }
-};
+        setMessage(
+          `FATE FAVORS YOU!!! ${winningColor} was selected. You won ${winnings} luck bucks!`,
+        );
+      } else {
+        // Player picked the wrong sword
+        setMessage(`${winningColor} was chosen. Your Luck has been spent.`);
+      }
+    };
 
     cycleLight();
   };
@@ -174,15 +174,24 @@ const finishGame = (winningIndex) => {
   const selectedLight = SWORDS.find((light) => light.name === selectedColor);
 
   return (
-    <Box className="light-bet-game">
+    <Box
+      className="light-bet-game"
+      sx={{
+        "--game-primary": theme.palette.primary.main,
+        "--game-secondary": theme.palette.secondary.main,
+        "--game-background": theme.palette.background.paper,
+        "--game-text": theme.palette.text.primary,
+        "--game-text-secondary": theme.palette.text.secondary,
+        "--game-divider": theme.palette.divider,
+        "--game-contrast": theme.palette.primary.contrastText,
+      }}
+    >
       {/* Decorative rivets */}
       <Box className="rivet rivet-top-left" />
       <Box className="rivet rivet-top-right" />
       <Box className="rivet rivet-bottom-left" />
       <Box className="rivet rivet-bottom-right" />
-
       <Typography className="machine-title">LUCK OF THE BLADE</Typography>
-
       <Box className="sword-panel">
         {SWORDS.map((sword, index) => (
           <Box
@@ -253,14 +262,12 @@ const finishGame = (winningIndex) => {
             : "Apply Luck"}
         </Button>
       </Box>
-
       {/* Score */}
       <Box className="score-display">
         <Typography className="score-label">Total Luck</Typography>
 
         <Typography className="score-value">{luck}</Typography>
       </Box>
-
       {/* Status */}
       <Box className="status-display">
         <Typography
@@ -271,7 +278,6 @@ const finishGame = (winningIndex) => {
           {message}
         </Typography>
       </Box>
-
       {/* Current selection indicator */}
       {selectedLight && !isPlaying && (
         <Box className="selection-display">
@@ -283,7 +289,7 @@ const finishGame = (winningIndex) => {
             }}
           />
 
-          <Typography>Betting on {selectedLight.name}</Typography>
+          <Typography>Chosen Blade: {selectedLight.name}</Typography>
         </Box>
       )}
     </Box>
