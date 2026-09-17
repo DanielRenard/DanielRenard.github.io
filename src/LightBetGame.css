@@ -1,0 +1,390 @@
+.light-bet-game {
+  position: relative;
+  width: 100%;
+  max-width: 620px;
+  margin: 20px auto;
+  padding: 28px;
+  box-sizing: border-box;
+
+  background:
+    linear-gradient(
+      145deg,
+      #30343a 0%,
+      #1d2024 45%,
+      #111316 100%
+    );
+
+  border: 3px solid #08090a;
+  border-radius: 8px;
+
+  box-shadow:
+    inset 0 0 0 2px #555a60,
+    inset 0 0 25px rgba(0, 0, 0, 0.8),
+    0 8px 20px rgba(0, 0, 0, 0.5);
+
+  color: #e5e7eb;
+  font-family: monospace;
+}
+
+/* -------------------------------- */
+/* Rivets */
+/* -------------------------------- */
+
+.rivet {
+  position: absolute;
+  width: 13px;
+  height: 13px;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle at 35% 30%,
+      #b8bec5 0%,
+      #666c73 35%,
+      #25282c 70%,
+      #111 100%
+    );
+
+  border: 1px solid #111;
+
+  box-shadow:
+    1px 1px 2px #000,
+    inset 1px 1px 1px rgba(255, 255, 255, 0.25);
+}
+
+.rivet-top-left {
+  top: 10px;
+  left: 10px;
+}
+
+.rivet-top-right {
+  top: 10px;
+  right: 10px;
+}
+
+.rivet-bottom-left {
+  bottom: 10px;
+  left: 10px;
+}
+
+.rivet-bottom-right {
+  bottom: 10px;
+  right: 10px;
+}
+
+/* -------------------------------- */
+/* Header */
+/* -------------------------------- */
+
+.machine-title {
+  margin-bottom: 18px !important;
+
+  text-align: center;
+
+  font-family: monospace !important;
+  font-size: 14px !important;
+  font-weight: bold !important;
+  letter-spacing: 4px !important;
+
+  color: #9ca3af;
+}
+
+/* -------------------------------- */
+/* Light panel */
+/* -------------------------------- */
+
+.light-panel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+
+  padding: 22px 18px;
+  margin-bottom: 24px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #08090a,
+      #17191c
+    );
+
+  border: 2px solid #050505;
+  border-radius: 5px;
+
+  box-shadow:
+    inset 0 3px 7px rgba(0, 0, 0, 0.9),
+    inset 0 -2px 3px rgba(255, 255, 255, 0.04);
+}
+
+/* -------------------------------- */
+/* Lights */
+/* -------------------------------- */
+
+.game-light {
+  --light-color: #ffffff;
+
+  width: 42px;
+  height: 42px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle at 35% 30%,
+      #555 0%,
+      #292929 35%,
+      #111 75%
+    );
+
+  border: 2px solid #080808;
+
+  box-shadow:
+    inset 0 -5px 8px rgba(0, 0, 0, 0.7),
+    0 2px 4px rgba(0, 0, 0, 0.8);
+
+  transition:
+    background 80ms linear,
+    box-shadow 80ms linear,
+    transform 80ms linear;
+}
+
+.game-light.light-active {
+  background:
+    radial-gradient(
+      circle at 35% 30%,
+      #ffffff 0%,
+      var(--light-color) 35%,
+      color-mix(
+        in srgb,
+        var(--light-color) 65%,
+        #000
+      ) 100%
+    );
+
+  box-shadow:
+    0 0 8px var(--light-color),
+    0 0 18px var(--light-color),
+    0 0 32px var(--light-color),
+    inset 0 2px 4px rgba(255, 255, 255, 0.7);
+
+  transform: scale(1.08);
+}
+
+/* -------------------------------- */
+/* Controls */
+/* -------------------------------- */
+
+.controls {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.control-label {
+  font-family: monospace !important;
+  font-size: 10px !important;
+  font-weight: bold !important;
+  letter-spacing: 2px !important;
+  color: #8b9299;
+}
+
+.game-select {
+  min-width: 120px;
+
+  background: #0d0f11;
+  color: #e5e7eb;
+}
+
+.game-select .MuiOutlinedInput-notchedOutline {
+  border-color: #555b61;
+}
+
+.game-select:hover .MuiOutlinedInput-notchedOutline {
+  border-color: #8b9299;
+}
+
+.game-select.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: #aaa;
+}
+
+.game-select .MuiSvgIcon-root {
+  color: #9ca3af;
+}
+
+.bet-field {
+  width: 75px;
+
+  background: #0d0f11;
+}
+
+.bet-field input {
+  color: #e5e7eb;
+  font-family: monospace;
+}
+
+.bet-field .MuiOutlinedInput-notchedOutline {
+  border-color: #555b61;
+}
+
+.bet-field:hover .MuiOutlinedInput-notchedOutline {
+  border-color: #8b9299;
+}
+
+.bet-field.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: #aaa;
+}
+
+/* -------------------------------- */
+/* Start button */
+/* -------------------------------- */
+
+.start-button {
+  height: 40px;
+  min-width: 95px;
+
+  font-family: monospace !important;
+  font-size: 12px !important;
+  font-weight: bold !important;
+  letter-spacing: 1px !important;
+
+  background: #374151 !important;
+
+  border: 1px solid #69717a !important;
+  box-shadow:
+    0 3px 0 #111,
+    inset 0 1px rgba(255, 255, 255, 0.15);
+}
+
+.start-button:hover {
+  background: #4b5563 !important;
+}
+
+.start-button:active {
+  transform: translateY(2px);
+  box-shadow:
+    0 1px 0 #111,
+    inset 0 1px rgba(255, 255, 255, 0.15);
+}
+
+.start-button.Mui-disabled {
+  background: #25282c !important;
+  color: #555 !important;
+}
+
+/* -------------------------------- */
+/* Score */
+/* -------------------------------- */
+
+.score-display {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 10px;
+
+  margin-top: 24px;
+  padding: 10px;
+
+  border-top: 1px solid #3b4046;
+  border-bottom: 1px solid #3b4046;
+}
+
+.score-label {
+  font-family: monospace !important;
+  font-size: 11px !important;
+  letter-spacing: 2px !important;
+  color: #7f8790;
+}
+
+.score-value {
+  font-family: monospace !important;
+  font-size: 24px !important;
+  font-weight: bold !important;
+  color: #d1d5db;
+}
+
+/* -------------------------------- */
+/* Status */
+/* -------------------------------- */
+
+.status-display {
+  min-height: 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-top: 12px;
+}
+
+.status-message {
+  font-family: monospace !important;
+  font-size: 12px !important;
+  text-align: center;
+  color: #9ca3af;
+}
+
+.win-message {
+  color: #facc15 !important;
+  font-weight: bold !important;
+}
+
+/* -------------------------------- */
+/* Selection */
+/* -------------------------------- */
+
+.selection-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  margin-top: 10px;
+
+  font-family: monospace;
+  font-size: 11px;
+  color: #737b84;
+}
+
+.selection-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+/* -------------------------------- */
+/* Responsive */
+/* -------------------------------- */
+
+@media (max-width: 600px) {
+  .light-bet-game {
+    padding: 22px 16px;
+  }
+
+  .light-panel {
+    gap: 7px;
+    padding: 18px 8px;
+  }
+
+  .game-light {
+    width: 34px;
+    height: 34px;
+  }
+
+  .controls {
+    flex-wrap: wrap;
+  }
+
+  .start-button {
+    flex: 1;
+  }
+}
