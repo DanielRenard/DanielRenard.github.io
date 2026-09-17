@@ -25,6 +25,7 @@ import YoutubeEmbed from "./components/YoutubeEmbed";
 // import CometLayer from "./components/CometLayer";
 import SocialFeed from "./components/SocialFeed";
 import YoutubeShowcase from "./components/YoutubeShowcase";
+import LightBetGame from "./components/LightBetGame";
 
 import { getTheme } from "./theme";
 
@@ -278,6 +279,7 @@ export default function App() {
               </CardContent>
             </Card>
           </Section>
+          <LightBetGame startingPoints={10} />
 
           <Section>
             <Typography
