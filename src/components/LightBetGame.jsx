@@ -9,27 +9,53 @@ import {
 } from "@mui/material";
 import "../LightBetGame.css";
 
-const LIGHTS = [
-  { name: "Red", color: "#ef4444" },
-  { name: "Orange", color: "#f97316" },
-  { name: "Yellow", color: "#eab308" },
-  { name: "Green", color: "#22c55e" },
-  { name: "Blue", color: "#3b82f6" },
-  { name: "Purple", color: "#a855f7" },
-  { name: "Pink", color: "#ec4899" },
+const SWORDS = [
+  {
+    name: "Red",
+    color: "#ef4444",
+    shape: "longsword",
+  },
+  {
+    name: "Orange",
+    color: "#f97316",
+    shape: "katana",
+  },
+  {
+    name: "Yellow",
+    color: "#eab308",
+    shape: "rapier",
+  },
+  {
+    name: "Green",
+    color: "#22c55e",
+    shape: "scimitar",
+  },
+  {
+    name: "Blue",
+    color: "#3b82f6",
+    shape: "claymore",
+  },
+  {
+    name: "Purple",
+    color: "#a855f7",
+    shape: "broadsword",
+  },
+  {
+    name: "Pink",
+    color: "#ec4899",
+    shape: "dagger",
+  },
 ];
 
 const MIN_GAME_TIME = 5000;
 
-function LightBetGame({ startingPoints = 10 }) {
-  const [points, setPoints] = useState(startingPoints);
+function LightBetGame({ startingLuck = 10 }) {
+  const [luck, setLuck] = useState(startingLuck);
   const [selectedColor, setSelectedColor] = useState("");
   const [bet, setBet] = useState("");
   const [activeLight, setActiveLight] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [message, setMessage] = useState(
-    "Select a color and place your bet."
-  );
+  const [message, setMessage] = useState("Select a color and place your bet.");
 
   const timerRef = useRef(null);
   const animationRef = useRef(null);
@@ -46,19 +72,19 @@ function LightBetGame({ startingPoints = 10 }) {
 
     // Validate color
     if (!selectedColor) {
-      setMessage("Choose a color first.");
+      setMessage("Choose color alignment.");
       return;
     }
 
     // Validate bet
     if (!Number.isInteger(wager) || wager <= 0) {
-      setMessage("Enter a whole-number bet greater than zero.");
+      setMessage("Cast a whole-number sacrifice greater than zero.");
       return;
     }
 
     // Make sure the player can afford the bet
-    if (wager > points) {
-      setMessage(`You only have ${points} point${points === 1 ? "" : "s"}.`);
+    if (wager > luck) {
+      setMessage(`You only have ${luck} luck${luck === 1 ? "" : "s"}.`);
       return;
     }
 
@@ -67,19 +93,19 @@ function LightBetGame({ startingPoints = 10 }) {
     clearTimeout(animationRef.current);
 
     // Deduct the wager immediately
-    setPoints((currentPoints) => currentPoints - wager);
+    setLuck((currentLuck) => currentLuck - wager);
 
     setIsPlaying(true);
-    setMessage("The machine is spinning...");
+    setMessage("Your luck has been cast...");
 
     // Start the light sequence
-    let currentIndex = Math.floor(Math.random() * LIGHTS.length);
+    let currentIndex = Math.floor(Math.random() * SWORDS.length);
     let elapsed = 0;
 
     const cycleLight = () => {
       setActiveLight(currentIndex);
 
-      currentIndex = (currentIndex + 1) % LIGHTS.length;
+      currentIndex = (currentIndex + 1) % SWORDS.length;
 
       elapsed += 100;
 
@@ -101,8 +127,8 @@ function LightBetGame({ startingPoints = 10 }) {
 
       if (shouldContinue) {
         animationRef.current = setTimeout(
-          () => slowDown((index + 1) % LIGHTS.length),
-          180 + Math.random() * 100
+          () => slowDown((index + 1) % SWORDS.length),
+          180 + Math.random() * 100,
         );
       } else {
         // Final result
@@ -110,26 +136,28 @@ function LightBetGame({ startingPoints = 10 }) {
       }
     };
 
-    const finishGame = (winningIndex) => {
-      setActiveLight(winningIndex);
-      setIsPlaying(false);
+const finishGame = (winningIndex) => {
+  setActiveLight(winningIndex);
+  setIsPlaying(false);
 
-      const winningColor = LIGHTS[winningIndex].name;
+  const winningColor = SWORDS[winningIndex].name;
 
-      if (winningColor === selectedColor) {
-        const winnings = wager * 2;
+  if (winningColor === selectedColor) {
+    // Player picked the winning sword
+    const winnings = wager * 2;
 
-        setPoints((currentPoints) => currentPoints + winnings);
+    setLuck((currentLuck) => currentLuck + winnings);
 
-        setMessage(
-          `WIN! ${winningColor} was selected. You won ${winnings} points!`
-        );
-      } else {
-        setMessage(
-          `${winningColor} was selected. You lost your ${wager}-point bet.`
-        );
-      }
-    };
+    setMessage(
+      `FATE FAVORS YOU!!! ${winningColor} was selected. You won ${winnings} luck bucks!`
+    );
+  } else {
+    // Player picked the wrong sword
+    setMessage(
+      `${winningColor} was chosen. Your Luck has been spent.`
+    );
+  }
+};
 
     cycleLight();
   };
@@ -143,9 +171,7 @@ function LightBetGame({ startingPoints = 10 }) {
     }
   };
 
-  const selectedLight = LIGHTS.find(
-    (light) => light.name === selectedColor
-  );
+  const selectedLight = SWORDS.find((light) => light.name === selectedColor);
 
   return (
     <Box className="light-bet-game">
@@ -155,30 +181,30 @@ function LightBetGame({ startingPoints = 10 }) {
       <Box className="rivet rivet-bottom-left" />
       <Box className="rivet rivet-bottom-right" />
 
-      <Typography className="machine-title">
-        COLOR CHANCE
-      </Typography>
+      <Typography className="machine-title">LUCK OF THE BLADE</Typography>
 
-      <Box className="light-panel">
-        {LIGHTS.map((light, index) => (
+      <Box className="sword-panel">
+        {SWORDS.map((sword, index) => (
           <Box
-            key={light.name}
-            className={`game-light ${
-              activeLight === index ? "light-active" : ""
+            key={sword.name}
+            className={`sword ${sword.shape} ${
+              activeLight === index ? "sword-active" : ""
             }`}
             sx={{
-              "--light-color": light.color,
+              "--sword-color": sword.color,
             }}
-          />
+          >
+            <Box className="blade" />
+            <Box className="guard" />
+            <Box className="grip" />
+            <Box className="pommel" />
+          </Box>
         ))}
       </Box>
-
       <Box className="controls">
         {/* Color selection */}
         <Box className="control-group">
-          <Typography className="control-label">
-            COLOR
-          </Typography>
+          <Typography className="control-label">SWORD</Typography>
 
           <Select
             value={selectedColor}
@@ -188,11 +214,9 @@ function LightBetGame({ startingPoints = 10 }) {
             size="small"
             className="game-select"
           >
-            <MenuItem value="">
-              Select
-            </MenuItem>
+            <MenuItem value="">Select</MenuItem>
 
-            {LIGHTS.map((light) => (
+            {SWORDS.map((light) => (
               <MenuItem key={light.name} value={light.name}>
                 {light.name}
               </MenuItem>
@@ -202,9 +226,7 @@ function LightBetGame({ startingPoints = 10 }) {
 
         {/* Bet amount */}
         <Box className="control-group">
-          <Typography className="control-label">
-            BET
-          </Typography>
+          <Typography className="control-label">Try Your Luck</Typography>
 
           <TextField
             value={bet}
@@ -226,19 +248,17 @@ function LightBetGame({ startingPoints = 10 }) {
           disabled={isPlaying}
           className="start-button"
         >
-          {isPlaying ? "RUNNING" : "START"}
+          {isPlaying
+            ? "The Light Carenes Through the Prism of Psylatiantan"
+            : "Apply Luck"}
         </Button>
       </Box>
 
       {/* Score */}
       <Box className="score-display">
-        <Typography className="score-label">
-          POINTS
-        </Typography>
+        <Typography className="score-label">Total Luck</Typography>
 
-        <Typography className="score-value">
-          {points}
-        </Typography>
+        <Typography className="score-value">{luck}</Typography>
       </Box>
 
       {/* Status */}
@@ -263,9 +283,7 @@ function LightBetGame({ startingPoints = 10 }) {
             }}
           />
 
-          <Typography>
-            Betting on {selectedLight.name}
-          </Typography>
+          <Typography>Betting on {selectedLight.name}</Typography>
         </Box>
       )}
     </Box>

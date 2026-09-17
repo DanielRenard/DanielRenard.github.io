@@ -122,56 +122,420 @@
 /* Lights */
 /* -------------------------------- */
 
-.game-light {
-  --light-color: #ffffff;
+/* -------------------------------- */
+/* Sword display */
+/* -------------------------------- */
 
-  width: 42px;
-  height: 42px;
+.sword-panel {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 14px;
 
-  flex-shrink: 0;
+  height: 145px;
 
-  border-radius: 50%;
+  padding: 15px 18px;
 
   background:
-    radial-gradient(
-      circle at 35% 30%,
-      #555 0%,
-      #292929 35%,
-      #111 75%
+    linear-gradient(
+      180deg,
+      #08090a,
+      #17191c
     );
 
-  border: 2px solid #080808;
+  border: 2px solid #050505;
+  border-radius: 5px;
 
   box-shadow:
-    inset 0 -5px 8px rgba(0, 0, 0, 0.7),
-    0 2px 4px rgba(0, 0, 0, 0.8);
-
-  transition:
-    background 80ms linear,
-    box-shadow 80ms linear,
-    transform 80ms linear;
+    inset 0 3px 7px rgba(0, 0, 0, 0.9),
+    inset 0 -2px 3px rgba(255, 255, 255, 0.04);
 }
 
-.game-light.light-active {
+/* -------------------------------- */
+/* Sword */
+/* -------------------------------- */
+
+.sword {
+  --sword-color: #ffffff;
+
+  position: relative;
+
+  width: 52px;
+  height: 120px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  filter:
+    drop-shadow(0 3px 2px rgba(0, 0, 0, 0.8));
+
+  transition:
+    filter 100ms ease,
+    transform 100ms ease;
+}
+
+/* -------------------------------- */
+/* Blade */
+/* -------------------------------- */
+
+.blade {
+  position: absolute;
+
+  top: 0;
+
+  width: 18px;
+  height: 76px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #555,
+      #d7d9dc 25%,
+      #f5f5f5 48%,
+      #8b8f94 75%,
+      #383b3f
+    );
+
+  border: 1px solid #161719;
+
+  clip-path: polygon(
+    25% 0%,
+    75% 0%,
+    100% 82%,
+    50% 100%,
+    0% 82%
+  );
+
+  box-shadow:
+    inset 0 0 3px rgba(255, 255, 255, 0.6);
+}
+
+/* Colored edge */
+
+.blade::after {
+  content: "";
+
+  position: absolute;
+
+  top: 8%;
+  left: 50%;
+
+  width: 3px;
+  height: 70%;
+
+  transform: translateX(-50%);
+
+  background: var(--sword-color);
+
+  opacity: 0.8;
+
+  box-shadow:
+    0 0 4px var(--sword-color);
+}
+
+/* -------------------------------- */
+/* Guard */
+/* -------------------------------- */
+
+.guard {
+  position: absolute;
+
+  top: 70px;
+
+  width: 42px;
+  height: 7px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #b9bdc2,
+      #565b61,
+      #202327
+    );
+
+  border: 1px solid #111;
+
+  border-radius: 3px;
+
+  box-shadow:
+    0 2px 2px rgba(0, 0, 0, 0.7);
+}
+
+/* -------------------------------- */
+/* Grip */
+/* -------------------------------- */
+
+.grip {
+  position: absolute;
+
+  top: 76px;
+
+  width: 11px;
+  height: 31px;
+
+  background:
+    repeating-linear-gradient(
+      135deg,
+      #151515 0px,
+      #151515 4px,
+      #414141 4px,
+      #414141 7px
+    );
+
+  border-left: 1px solid #080808;
+  border-right: 1px solid #080808;
+}
+
+/* -------------------------------- */
+/* Pommel */
+/* -------------------------------- */
+
+.pommel {
+  position: absolute;
+
+  top: 105px;
+
+  width: 16px;
+  height: 13px;
+
   background:
     radial-gradient(
       circle at 35% 30%,
-      #ffffff 0%,
-      var(--light-color) 35%,
-      color-mix(
-        in srgb,
-        var(--light-color) 65%,
-        #000
-      ) 100%
+      #d0d3d6,
+      #656a70 45%,
+      #24272a 80%
+    );
+
+  border: 1px solid #111;
+
+  border-radius: 50%;
+}
+
+/* -------------------------------- */
+/* Active sword */
+/* -------------------------------- */
+
+.sword-active {
+  transform: translateY(-7px) scale(1.08);
+
+  filter:
+    drop-shadow(0 0 4px var(--sword-color))
+    drop-shadow(0 0 10px var(--sword-color))
+    drop-shadow(0 0 18px var(--sword-color));
+}
+
+.sword-active .blade {
+  background:
+    linear-gradient(
+      90deg,
+      #666,
+      #ffffff 25%,
+      #ffffff 50%,
+      #cfd2d5 75%,
+      #555
     );
 
   box-shadow:
-    0 0 8px var(--light-color),
-    0 0 18px var(--light-color),
-    0 0 32px var(--light-color),
-    inset 0 2px 4px rgba(255, 255, 255, 0.7);
+    0 0 8px var(--sword-color),
+    0 0 18px var(--sword-color),
+    inset 0 0 6px #ffffff;
+}
 
-  transform: scale(1.08);
+.sword-active .blade::after {
+  opacity: 1;
+
+  box-shadow:
+    0 0 5px var(--sword-color),
+    0 0 12px var(--sword-color);
+}
+
+.sword-active .guard {
+  box-shadow:
+    0 0 8px var(--sword-color);
+}
+
+.sword-active .pommel {
+  box-shadow:
+    0 0 8px var(--sword-color);
+}
+
+/* -------------------------------- */
+/* Longsword */
+/* -------------------------------- */
+
+.sword.longsword .blade {
+  width: 17px;
+  height: 78px;
+
+  clip-path: polygon(
+    15% 0%,
+    85% 0%,
+    100% 85%,
+    50% 100%,
+    0% 85%
+  );
+}
+
+
+/* -------------------------------- */
+/* Katana */
+/* -------------------------------- */
+
+.sword.katana .blade {
+  width: 13px;
+  height: 84px;
+
+  border-radius: 2px 2px 10px 2px;
+
+  transform: skewX(-3deg);
+
+  clip-path: polygon(
+    5% 0%,
+    90% 0%,
+    100% 88%,
+    45% 100%,
+    0% 88%
+  );
+}
+
+.sword.katana .guard {
+  width: 25px;
+  height: 10px;
+
+  border-radius: 50%;
+}
+
+
+/* -------------------------------- */
+/* Rapier */
+/* -------------------------------- */
+
+.sword.rapier .blade {
+  width: 7px;
+  height: 86px;
+
+  clip-path: polygon(
+    30% 0%,
+    70% 0%,
+    100% 92%,
+    50% 100%,
+    0% 92%
+  );
+}
+
+.sword.rapier .guard {
+  width: 46px;
+  height: 5px;
+
+  border-radius: 50%;
+}
+
+.sword.rapier .grip {
+  height: 34px;
+}
+
+
+/* -------------------------------- */
+/* Scimitar */
+/* -------------------------------- */
+
+.sword.scimitar .blade {
+  width: 23px;
+  height: 78px;
+
+  transform: rotate(7deg);
+
+  border-radius: 50% 5px 50% 10px;
+
+  clip-path: polygon(
+    20% 0%,
+    65% 0%,
+    100% 70%,
+    75% 95%,
+    25% 100%,
+    0% 65%
+  );
+}
+
+
+/* -------------------------------- */
+/* Claymore */
+/* -------------------------------- */
+
+.sword.claymore .blade {
+  width: 25px;
+  height: 75px;
+
+  clip-path: polygon(
+    15% 0%,
+    85% 0%,
+    100% 85%,
+    50% 100%,
+    0% 85%
+  );
+}
+
+.sword.claymore .guard {
+  width: 50px;
+  height: 9px;
+}
+
+.sword.claymore .grip {
+  width: 14px;
+}
+
+
+/* -------------------------------- */
+/* Broadsword */
+/* -------------------------------- */
+
+.sword.broadsword .blade {
+  width: 26px;
+  height: 72px;
+
+  clip-path: polygon(
+    5% 0%,
+    95% 0%,
+    100% 85%,
+    50% 100%,
+    0% 85%
+  );
+}
+
+
+/* -------------------------------- */
+/* Dagger */
+/* -------------------------------- */
+
+.sword.dagger {
+  height: 105px;
+}
+
+.sword.dagger .blade {
+  width: 21px;
+  height: 58px;
+
+  clip-path: polygon(
+    10% 0%,
+    90% 0%,
+    100% 75%,
+    50% 100%,
+    0% 75%
+  );
+}
+
+.sword.dagger .guard {
+  top: 53px;
+}
+
+.sword.dagger .grip {
+  top: 60px;
+  height: 27px;
+}
+
+.sword.dagger .pommel {
+  top: 86px;
 }
 
 /* -------------------------------- */
