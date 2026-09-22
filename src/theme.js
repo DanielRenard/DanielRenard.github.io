@@ -7,6 +7,21 @@ export const getTheme = (themeName = "light") => {
   const isLisa = themeName === "lisaFrank";
 
   return createTheme({
+    shape: {
+      borderRadius: isRetro ? 0 : 18,
+    },
+
+    custom: {
+      themeName,
+      cornerIcon: isLight ? "⚔️" : isDark ? "⛤" : isRetro ? "⚙️" : "🐾",
+      cornerColor: isLight
+        ? "#5B2E91"
+        : isDark
+          ? "#ff3333"
+          : isRetro
+            ? "#00FF66"
+            : "#00e5ff",
+    },
     palette: {
       mode: isLight ? "light" : "dark",
 

@@ -78,54 +78,41 @@
 
 
 /* ================================= */
-/* RIVETS */
+/* corners */
 /* ================================= */
 
-.rivet {
+.theme-corner {
   position: absolute;
-
-  width: 11px;
-  height: 11px;
-
-  border-radius: 50%;
-
-  background:
-    radial-gradient(
-      circle at 35% 30%,
-      #c5c9cd 0%,
-      #737980 35%,
-      #292d31 70%,
-      #111 100%
-    );
-
-  border: 1px solid #111;
-
-  box-shadow:
-    1px 1px 2px #000,
-    inset 1px 1px 1px
-      rgba(255, 255, 255, 0.25);
+  z-index: 10;
+  color: var(--corner-color);
+  font-size: 28px;
+  line-height: 1;
+  text-shadow: 0 0 8px var(--corner-color);
+  pointer-events: none;
 }
 
-.rivet-top-left {
-  top: 9px;
-  left: 9px;
+.theme-corner-top-left {
+  top: 12px;
+  left: 14px;
 }
 
-.rivet-top-right {
-  top: 9px;
-  right: 9px;
+.theme-corner-top-right {
+  top: 12px;
+  right: 14px;
+  transform: scaleX(-1);
 }
 
-.rivet-bottom-left {
-  bottom: 9px;
-  left: 9px;
+.theme-corner-bottom-left {
+  bottom: 12px;
+  left: 14px;
+  transform: scaleY(-1);
 }
 
-.rivet-bottom-right {
-  bottom: 9px;
-  right: 9px;
+.theme-corner-bottom-right {
+  bottom: 12px;
+  right: 14px;
+  transform: rotate(180deg);
 }
-
 
 /* ================================= */
 /* TITLE */
@@ -737,15 +724,22 @@
     var(--game-primary);
 }
 
+/* ================================= */
+/* GEM BUTTON */
+/* ================================= */
 
 /* ================================= */
-/* START BUTTON */
+/* GEM BUTTON */
 /* ================================= */
 
 .start-button {
-  height: 40px;
+  position: relative;
 
-  min-width: 105px;
+  width: 145px;
+  min-width: 145px;
+  height: 52px;
+
+  padding: 0 28px;
 
   font-family:
     monospace !important;
@@ -754,49 +748,229 @@
 
   font-weight: bold !important;
 
-  letter-spacing: 1px !important;
-
-  background:
-    var(--game-primary) !important;
+  letter-spacing: 2px !important;
 
   color:
     var(--game-contrast) !important;
 
-  border:
-    1px solid
-    var(--game-primary) !important;
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(
+        in srgb,
+        var(--game-primary) 65%,
+        #ffffff
+      ),
+      var(--game-primary) 35%,
+      color-mix(
+        in srgb,
+        var(--game-primary) 70%,
+        #000000
+      )
+    ) !important;
+
+  border: none !important;
+
+  border-radius: 0 !important;
+
+  clip-path: polygon(
+    12% 0%,
+    88% 0%,
+    100% 50%,
+    88% 100%,
+    12% 100%,
+    0% 50%
+  );
+
+  box-shadow: none !important;
+
+  overflow: hidden;
+
+  transition:
+    width 400ms ease,
+    transform 160ms ease,
+    filter 250ms ease;
+}
+
+/* --------------------------------- */
+/* Gem facets */
+/* --------------------------------- */
+
+.start-button::before {
+  content: "";
+
+  position: absolute;
+
+  inset: 3px;
+
+  z-index: 0;
+
+  pointer-events: none;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,0.75) 0%,
+      rgba(255,255,255,0.15) 18%,
+      transparent 30%
+    ),
+
+    linear-gradient(
+      45deg,
+      transparent 58%,
+      rgba(255,255,255,0.25) 59%,
+      rgba(255,255,255,0.05) 72%,
+      transparent 73%
+    ),
+
+    linear-gradient(
+      315deg,
+      rgba(255,255,255,0.35) 0%,
+      transparent 22%
+    );
+
+  clip-path: polygon(
+    12% 0%,
+    88% 0%,
+    100% 50%,
+    88% 100%,
+    12% 100%,
+    0% 50%
+  );
+}
+
+
+/* --------------------------------- */
+/* Beveled gemstone edge */
+/* --------------------------------- */
+
+.start-button::after {
+  content: "";
+
+  position: absolute;
+
+  inset: 3px;
+
+  z-index: 1;
+
+  pointer-events: none;
+
+  border: 2px solid
+    rgba(255, 255, 255, 0.55);
+
+  clip-path: polygon(
+    12% 0%,
+    88% 0%,
+    100% 50%,
+    88% 100%,
+    12% 100%,
+    0% 50%
+  );
 
   box-shadow:
-    0 3px 0
-    rgba(0, 0, 0, 0.5);
+    inset 0 0 8px
+      rgba(255,255,255,0.3);
 }
+
+
+/* --------------------------------- */
+/* Keep button text above facets */
+/* --------------------------------- */
+
+.start-button .MuiButton-label,
+.start-button {
+  text-shadow:
+    0 0 5px
+      rgba(255,255,255,0.75);
+}
+
+
+/* --------------------------------- */
+/* Hover */
+/* --------------------------------- */
 
 .start-button:hover {
-  background:
-    var(--game-secondary) !important;
+  transform:
+    translateY(-2px)
+    scale(1.02);
 
-  border-color:
-    var(--game-secondary) !important;
+  filter:
+    brightness(1.12)
+    drop-shadow(
+      0 0 5px
+      var(--game-primary)
+    )
+    drop-shadow(
+      0 0 12px
+      var(--game-primary)
+    );
 }
+
+
+/* --------------------------------- */
+/* Pressed */
+/* --------------------------------- */
 
 .start-button:active {
   transform:
-    translateY(2px);
+    translateY(2px)
+    scale(0.98);
 
-  box-shadow:
-    0 1px 0
-    rgba(0, 0, 0, 0.5);
+  filter:
+    brightness(0.95)
+    drop-shadow(
+      0 0 5px
+      var(--game-primary)
+    );
 }
+
+/* ================================= */
+/* CHARGED / PLAYING STATE */
+/* ================================= */
 
 .start-button.Mui-disabled {
+  width: 390px;
+  min-width: 390px;
+
   background:
-    var(--game-divider) !important;
+    linear-gradient(
+      135deg,
+      color-mix(
+        in srgb,
+        var(--game-primary) 65%,
+        #ffffff
+      ),
+      var(--game-primary) 35%,
+      color-mix(
+        in srgb,
+        var(--game-primary) 70%,
+        #000000
+      )
+    ) !important;
 
   color:
-    var(--game-text-secondary)
+    var(--game-contrast)
     !important;
-}
 
+  opacity: 1 !important;
+
+  filter:
+    brightness(1.12)
+    drop-shadow(
+      0 0 5px
+      var(--game-primary)
+    )
+    drop-shadow(
+      0 0 12px
+      var(--game-primary)
+    )
+    drop-shadow(
+      0 0 24px
+      var(--game-primary)
+    );
+
+  transform: none;
+}
 
 /* ================================= */
 /* LUCK TOTAL */
@@ -853,7 +1027,6 @@
     var(--game-primary)
     !important;
 }
-
 
 /* ================================= */
 /* STATUS MESSAGE */

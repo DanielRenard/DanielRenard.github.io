@@ -158,7 +158,7 @@ function LightBetGame({ startingLuck = 10 }) {
         setCelebration("win");
 
         setMessage(
-          `FATE FAVORS YOU!!! ${winningColor} was selected. You won ${winnings}🦌!`
+          `FATE FAVORS YOU!!! ${winningColor} was selected. You won ${winnings}🦌!`,
         );
       } else {
         setCelebration("lose");
@@ -198,6 +198,7 @@ function LightBetGame({ startingLuck = 10 }) {
         "--game-text-secondary": theme.palette.text.secondary,
         "--game-divider": theme.palette.divider,
         "--game-contrast": theme.palette.primary.contrastText,
+        "--corner-color": theme.custom.cornerColor,
       }}
     >
       {celebration && (
@@ -225,10 +226,21 @@ function LightBetGame({ startingLuck = 10 }) {
         </Box>
       )}
       {/* Decorative rivets */}
-      <Box className="rivet rivet-top-left" />
-      <Box className="rivet rivet-top-right" />
-      <Box className="rivet rivet-bottom-left" />
-      <Box className="rivet rivet-bottom-right" />
+      <Box className="theme-corner theme-corner-top-left">
+        {theme.custom.cornerIcon}
+      </Box>
+
+      <Box className="theme-corner theme-corner-top-right">
+        {theme.custom.cornerIcon}
+      </Box>
+
+      <Box className="theme-corner theme-corner-bottom-left">
+        {theme.custom.cornerIcon}
+      </Box>
+
+      <Box className="theme-corner theme-corner-bottom-right">
+        {theme.custom.cornerIcon}
+      </Box>
       <Typography className="machine-title">LUCK OF THE BLADE</Typography>
       <Box className="sword-panel">
         {SWORDS.map((sword, index) => (
@@ -310,7 +322,7 @@ function LightBetGame({ startingLuck = 10 }) {
       <Box className="status-display">
         <Typography
           className={`status-message ${
-            message.startsWith("WIN") ? "win-message" : ""
+            message.startsWith("FATE") ? "win-message" : ""
           }`}
         >
           {message}
