@@ -3,6 +3,7 @@
 /* ================================= */
 
 .light-bet-game {
+  
   position: relative;
 
   width: 100%;
@@ -34,6 +35,45 @@
     inset 0 0 0 1px var(--game-divider),
     inset 0 0 25px rgba(0, 0, 0, 0.25),
     0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+.celebration-overlay {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.celebration-emoji {
+  position: absolute;
+  top: -50px;
+  font-size: 30px;
+  line-height: 1;
+  animation-name: emoji-cascade;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.35));
+}
+
+@keyframes emoji-cascade {
+  0% {
+    transform: translateY(-60px) rotate(0deg);
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  90% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(calc(100vh + 100px)) rotate(360deg);
+    opacity: 0;
+  }
 }
 
 
@@ -122,11 +162,13 @@
 
   gap: 8px;
 
-  height: 115px;
+  height: 135px;
 
   padding: 10px 12px;
 
   box-sizing: border-box;
+
+  overflow: visible;
 
   background:
     linear-gradient(
@@ -166,10 +208,11 @@
     var(--game-primary);
 
   position: relative;
+  overflow: visible;
 
   width: 34px;
 
-  height: 96px;
+  height: 115px;
 
   display: flex;
 
@@ -196,34 +239,30 @@
 .blade {
   position: absolute;
 
+  left: 50%;
   top: 0;
 
-  width: 11px;
+  width: 26px;
+  height: 62px;
 
-  height: 58px;
+  transform: translateX(-50%);
 
-  background:
-    linear-gradient(
-      90deg,
-      #555,
-      #d7d9dc 25%,
-      #f5f5f5 48%,
-      #8b8f94 75%,
-      #383b3f
-    );
+  background: var(--sword-color);
 
-  border: 1px solid #161719;
+  clip-path: polygon(
+    50% 0%,
+    100% 18%,
+    100% 100%,
+    0% 100%,
+    0% 18%
+  );
 
-  clip-path:
-    polygon(
-      25% 0%,
-      75% 0%,
-      100% 82%,
-      50% 100%,
-      0% 82%
+  filter:
+    drop-shadow(
+      0 0 3px
+      var(--sword-color)
     );
 }
-
 
 /* Colored blade line */
 
@@ -261,7 +300,7 @@
 .guard {
   position: absolute;
 
-  top: 55px;
+  top: 64px;
 
   width: 30px;
 
@@ -292,7 +331,7 @@
 .grip {
   position: absolute;
 
-  top: 60px;
+  top: 69px;
 
   width: 7px;
 
@@ -322,7 +361,7 @@
 .pommel {
   position: absolute;
 
-  top: 83px;
+  top: 92px;
 
   width: 11px;
 
@@ -353,17 +392,15 @@
 
 .sword.longsword .blade {
   width: 11px;
+  height: 62px;
 
-  height: 60px;
-
-  clip-path:
-    polygon(
-      15% 0%,
-      85% 0%,
-      100% 85%,
-      50% 100%,
-      0% 85%
-    );
+  clip-path: polygon(
+    50% 0%,
+    100% 16%,
+    100% 100%,
+    0% 100%,
+    0% 16%
+  );
 }
 
 
@@ -373,23 +410,19 @@
 
 .sword.katana .blade {
   width: 9px;
+  height: 62px;
 
-  height: 65px;
+  border-radius: 2px 2px 8px 2px;
 
-  border-radius:
-    2px 2px 8px 2px;
+  transform: skewX(-3deg);
 
-  transform:
-    skewX(-3deg);
-
-  clip-path:
-    polygon(
-      5% 0%,
-      90% 0%,
-      100% 88%,
-      45% 100%,
-      0% 88%
-    );
+  clip-path: polygon(
+    50% 0%,
+    100% 18%,
+    100% 100%,
+    0% 100%,
+    0% 18%
+  );
 }
 
 .sword.katana .guard {
@@ -407,17 +440,15 @@
 
 .sword.rapier .blade {
   width: 5px;
+  height: 62px;
 
-  height: 66px;
-
-  clip-path:
-    polygon(
-      30% 0%,
-      70% 0%,
-      100% 92%,
-      50% 100%,
-      0% 92%
-    );
+  clip-path: polygon(
+    50% 0%,
+    100% 18%,
+    100% 100%,
+    0% 100%,
+    0% 18%
+  );
 }
 
 .sword.rapier .guard {
@@ -435,24 +466,21 @@
 
 .sword.scimitar .blade {
   width: 14px;
+  height: 62px;
 
-  height: 60px;
+  transform: rotate(7deg);
 
-  transform:
-    rotate(7deg);
+  border-radius: 50% 5px 50% 10px;
 
-  border-radius:
-    50% 5px 50% 10px;
-
-  clip-path:
-    polygon(
-      20% 0%,
-      65% 0%,
-      100% 70%,
-      75% 95%,
-      25% 100%,
-      0% 65%
-    );
+  clip-path: polygon(
+    50% 0%,
+    75% 12%,
+    100% 55%,
+    78% 82%,
+    50% 100%,
+    18% 92%,
+    0% 60%
+  );
 }
 
 
@@ -462,17 +490,15 @@
 
 .sword.claymore .blade {
   width: 15px;
+  height: 62px;
 
-  height: 58px;
-
-  clip-path:
-    polygon(
-      15% 0%,
-      85% 0%,
-      100% 85%,
-      50% 100%,
-      0% 85%
-    );
+  clip-path: polygon(
+    50% 0%,
+    85% 16%,
+    100% 100%,
+    0% 100%,
+    15% 16%
+  );
 }
 
 .sword.claymore .guard {
@@ -488,17 +514,15 @@
 
 .sword.broadsword .blade {
   width: 16px;
+  height: 62px;
 
-  height: 56px;
-
-  clip-path:
-    polygon(
-      5% 0%,
-      95% 0%,
-      100% 85%,
-      50% 100%,
-      0% 85%
-    );
+  clip-path: polygon(
+    50% 0%,
+    95% 16%,
+    100% 100%,
+    0% 100%,
+    5% 16%
+  );
 }
 
 
@@ -512,17 +536,15 @@
 
 .sword.dagger .blade {
   width: 13px;
+  height: 45px;
 
-  height: 44px;
-
-  clip-path:
-    polygon(
-      10% 0%,
-      90% 0%,
-      100% 75%,
-      50% 100%,
-      0% 75%
-    );
+  clip-path: polygon(
+    50% 0%,
+    100% 20%,
+    100% 100%,
+    0% 100%,
+    0% 20%
+  );
 }
 
 .sword.dagger .guard {
