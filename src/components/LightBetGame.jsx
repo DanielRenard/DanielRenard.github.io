@@ -92,7 +92,7 @@ function LightBetGame({ startingLuck = 10 }) {
 
     // Make sure the player can afford the bet
     if (wager > luck) {
-      setMessage(`You have ${luck} luck bucks${luck === 1 ? "" : "s"}.`);
+      setMessage(`You have ${luck} luck buck${luck === 1 ? "" : "s"}.`);
       return;
     }
 
@@ -158,7 +158,7 @@ function LightBetGame({ startingLuck = 10 }) {
         setCelebration("win");
 
         setMessage(
-          `FATE FAVORS YOU!!! ${winningColor} was selected. You won ${winnings} luck bucks!`,
+          `FATE FAVORS YOU!!! ${winningColor} was selected. You won ${winnings}🦌!`
         );
       } else {
         setCelebration("lose");
@@ -203,8 +203,8 @@ function LightBetGame({ startingLuck = 10 }) {
       {celebration && (
         <Box className={`celebration-overlay ${celebration}`}>
           {Array.from({ length: 28 }).map((_, index) => {
-            const winEmojis = ["🌈", "💰", "🌈", "💰"];
-            const loseEmojis = ["🧙‍♂️", "✨", "🔮", "✨"];
+            const winEmojis = ["🌈", "🦌", "🌈", "🦌"];
+            const loseEmojis = ["👹", "✨", "🧙‍♂️✨"];
 
             const emojis = celebration === "win" ? winEmojis : loseEmojis;
 
