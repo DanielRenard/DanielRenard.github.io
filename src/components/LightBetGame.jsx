@@ -58,18 +58,24 @@ function LightBetGame({ startingLuck = 10 }) {
   const [activeLight, setActiveLight] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [message, setMessage] = useState("Select a color and press your luck.");
+  const [celebration, setCelebration] = useState(null);
 
   const timerRef = useRef(null);
   const animationRef = useRef(null);
+  const celebrationTimerRef = useRef(null);
 
   useEffect(() => {
     return () => {
       clearTimeout(timerRef.current);
       clearTimeout(animationRef.current);
+      clearTimeout(celebrationTimerRef.current);
     };
   }, []);
 
   const startGame = () => {
+    setCelebration(null);
+    clearTimeout(celebrationTimerRef.current);
+
     const wager = Number(bet);
 
     // Validate color
@@ -86,7 +92,7 @@ function LightBetGame({ startingLuck = 10 }) {
 
     // Make sure the player can afford the bet
     if (wager > luck) {
-      setMessage(`You only have ${luck} luck${luck === 1 ? "" : "s"}.`);
+      setMessage(`You have ${luck} luck bucks${luck === 1 ? "" : "s"}.`);
       return;
     }
 
@@ -145,18 +151,26 @@ function LightBetGame({ startingLuck = 10 }) {
       const winningColor = SWORDS[winningIndex].name;
 
       if (winningColor === selectedColor) {
-        // Player picked the winning sword
         const winnings = wager * 2;
 
         setLuck((currentLuck) => currentLuck + winnings);
+
+        setCelebration("win");
 
         setMessage(
           `FATE FAVORS YOU!!! ${winningColor} was selected. You won ${winnings} luck bucks!`,
         );
       } else {
-        // Player picked the wrong sword
+        setCelebration("lose");
+
         setMessage(`${winningColor} was chosen. Your Luck has been spent.`);
       }
+
+      clearTimeout(celebrationTimerRef.current);
+
+      celebrationTimerRef.current = setTimeout(() => {
+        setCelebration(null);
+      }, 4500);
     };
 
     cycleLight();
@@ -186,6 +200,30 @@ function LightBetGame({ startingLuck = 10 }) {
         "--game-contrast": theme.palette.primary.contrastText,
       }}
     >
+      {celebration && (
+        <Box className={`celebration-overlay ${celebration}`}>
+          {Array.from({ length: 28 }).map((_, index) => {
+            const winEmojis = ["🌈", "💰", "🌈", "💰"];
+            const loseEmojis = ["🧙‍♂️", "✨", "🔮", "✨"];
+
+            const emojis = celebration === "win" ? winEmojis : loseEmojis;
+
+            return (
+              <span
+                key={index}
+                className="celebration-emoji"
+                style={{
+                  left: `${(index * 37) % 100}%`,
+                  animationDelay: `${(index % 9) * 0.12}s`,
+                  animationDuration: `${3.2 + (index % 5) * 0.25}s`,
+                }}
+              >
+                {emojis[index % emojis.length]}
+              </span>
+            );
+          })}
+        </Box>
+      )}
       {/* Decorative rivets */}
       <Box className="rivet rivet-top-left" />
       <Box className="rivet rivet-top-right" />
@@ -213,7 +251,7 @@ function LightBetGame({ startingLuck = 10 }) {
       <Box className="controls">
         {/* Color selection */}
         <Box className="control-group">
-          <Typography className="control-label">SWORD</Typography>
+          <Typography className="control-label">Light Alignment</Typography>
 
           <Select
             value={selectedColor}
@@ -264,8 +302,8 @@ function LightBetGame({ startingLuck = 10 }) {
       </Box>
       {/* Score */}
       <Box className="score-display">
-        <Typography className="score-label">Total Luck</Typography>
-
+        <Typography className="score-label">Luck 🦌🦌</Typography>
+        <br />
         <Typography className="score-value">{luck}</Typography>
       </Box>
       {/* Status */}
