@@ -204,8 +204,8 @@ function LightBetGame({ startingLuck = 10 }) {
       {celebration && (
         <Box className={`celebration-overlay ${celebration}`}>
           {Array.from({ length: 28 }).map((_, index) => {
-            const winEmojis = ["🌈", "🦌", "🌈", "🦌"];
-            const loseEmojis = ["👹", "✨", "🧙‍♂️✨"];
+            const winEmojis = ["🌈", "🦌", "🦌", "🌈", "🧙🏽‍♂️"];
+            const loseEmojis = ["👹", "✨", "🖤", "🌕", "🖤", "✨"];
 
             const emojis = celebration === "win" ? winEmojis : loseEmojis;
 
@@ -313,9 +313,8 @@ function LightBetGame({ startingLuck = 10 }) {
       {/* Score + Current Selection */}
       <Box className="score-display">
         <Box className="luck-total">
-          <Typography className="score-label">Luck</Typography>
-
           <Typography className="score-value">{luck}</Typography>
+          {/* <Typography className="score-label">🦌 🦌</Typography> */}
         </Box>
 
         {selectedLight && !isPlaying && (
