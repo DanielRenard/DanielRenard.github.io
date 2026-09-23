@@ -733,7 +733,9 @@
 /* ================================= */
 
 .start-button {
+  pointer-events: auto !important;
   position: relative;
+  z-index: 10;
 
   width: 145px;
   min-width: 145px;
@@ -914,7 +916,7 @@
 .start-button:active {
   transform:
     translateY(2px)
-    scale(0.);
+    scale(0.98);
 
   filter:
     brightness(0.95)
