@@ -914,7 +914,7 @@
 .start-button:active {
   transform:
     translateY(2px)
-    scale(0.98);
+    scale(0.);
 
   filter:
     brightness(0.95)
@@ -929,8 +929,8 @@
 /* ================================= */
 
 .start-button.Mui-disabled {
-  width: 390px;
-  min-width: 390px;
+  width: 280px;
+  min-width: 280px;
 
   background:
     linear-gradient(
@@ -979,11 +979,11 @@
 .score-display {
   display: flex;
 
-  align-items: baseline;
+  align-items: center;
 
   justify-content: center;
 
-  gap: 10px;
+  gap: 28px;
 
   margin-top: 20px;
 
@@ -996,6 +996,14 @@
   border-bottom:
     1px solid
     var(--game-divider);
+}
+
+.luck-total {
+  display: flex;
+
+  align-items: baseline;
+
+  gap: 10px;
 }
 
 .score-label {
@@ -1078,17 +1086,14 @@
 
   align-items: center;
 
-  justify-content: center;
-
   gap: 7px;
 
-  margin-top: 8px;
+  margin: 0;
 
   font-family:
     monospace;
 
-  font-size:
-    10px;
+  font-size: 10px;
 
   color:
     var(--game-text-secondary);

@@ -307,16 +307,29 @@ function LightBetGame({ startingLuck = 10 }) {
           disabled={isPlaying}
           className="start-button"
         >
-          {isPlaying
-            ? "The Light Carenes Through the Prism of Psylatiantan"
-            : "Apply Luck"}
+          {isPlaying ? "The Prism of Psylatiantan Shines" : "Apply Luck"}
         </Button>
       </Box>
-      {/* Score */}
+      {/* Score + Current Selection */}
       <Box className="score-display">
-        <Typography className="score-label">Luck 🦌🦌</Typography>
-        <br />
-        <Typography className="score-value">{luck}</Typography>
+        <Box className="luck-total">
+          <Typography className="score-label">Luck</Typography>
+
+          <Typography className="score-value">{luck}</Typography>
+        </Box>
+
+        {selectedLight && !isPlaying && (
+          <Box className="selection-display">
+            <Box
+              className="selection-dot"
+              sx={{
+                backgroundColor: selectedLight.color,
+                boxShadow: `0 0 10px ${selectedLight.color}`,
+              }}
+            />
+            <Typography>Chosen blade: {selectedLight.name}</Typography>
+          </Box>
+        )}
       </Box>
       {/* Status */}
       <Box className="status-display">
@@ -328,20 +341,6 @@ function LightBetGame({ startingLuck = 10 }) {
           {message}
         </Typography>
       </Box>
-      {/* Current selection indicator */}
-      {selectedLight && !isPlaying && (
-        <Box className="selection-display">
-          <Box
-            className="selection-dot"
-            sx={{
-              backgroundColor: selectedLight.color,
-              boxShadow: `0 0 10px ${selectedLight.color}`,
-            }}
-          />
-
-          <Typography>Chosen Blade: {selectedLight.name}</Typography>
-        </Box>
-      )}
     </Box>
   );
 }
