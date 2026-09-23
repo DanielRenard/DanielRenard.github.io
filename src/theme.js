@@ -13,7 +13,7 @@ export const getTheme = (themeName = "light") => {
 
     custom: {
       themeName,
-      cornerIcon: isLight ? "⚔️" : isDark ? "⛤" : isRetro ? "⚙️" : "🐾",
+      cornerIcon: isLight ? "⚔️" : isDark ? "👻" : isRetro ? "⚙️" : "🐾",
       cornerColor: isLight
         ? "#5B2E91"
         : isDark
